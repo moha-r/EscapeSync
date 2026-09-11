@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<script src="./app.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="anonymous"></script>
+<style>
+  .es-map { position:absolute; inset:0; z-index:0; background:#050A0D; }
+  .es-map.deep .leaflet-tile { filter: invert(1) hue-rotate(172deg) saturate(1.35) contrast(1.22) brightness(.74); }
+  .es-map.dark .leaflet-tile { filter: invert(1) hue-rotate(185deg) brightness(.92) saturate(.72) contrast(.92); }
+  .es-map .leaflet-container { background:#050A0D; font-family: Manrope, system-ui, sans-serif; }
+  .es-map .leaflet-control-attribution { background:rgba(5,10,13,.72); color:#5C6B73; font-size:9.5px; }
+  .es-map .leaflet-control-attribution a { color:#9BA8B0; }
+  .es-map .leaflet-control-zoom { display:none; }
+  .es-route { filter: drop-shadow(0 0 10px rgba(0,214,201,.85)); }
+  .es-dash { stroke-dasharray: 26 220; animation: dashflow 6s linear infinite; }
+  .es-pin { display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .es-pin b { display:flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:50%; background:#00D6C9; color:#050A0D; font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:700; border:2px solid rgba(5,10,13,.9); box-shadow:0 0 22px rgba(0,214,201,.6),0 10px 20px rgba(0,0,0,.7); }
+  .es-pin.on b { width:42px; height:42px; background:#DFFF00; box-shadow:0 0 24px rgba(223,255,0,.75),0 10px 20px rgba(0,0,0,.7); }
+  .es-pin i { display:none; white-space:nowrap; padding:4px 10px; border-radius:100px; background:rgba(5,10,13,.86); font-size:11px; font-weight:600; font-style:normal; color:#F8FAFC; }
+  .es-pin.on i, .es-pin:hover i { display:block; }
+  .es-pin.on i { color:#DFFF00; }
+  .es-crew { width:22px; height:22px; font-size:9.5px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#101B20; border:1.5px solid rgba(103,232,249,.6); color:#67E8F9; font-size:11px; font-weight:700; box-shadow:0 6px 14px rgba(0,0,0,.6); }
+  .es-map .leaflet-popup-content-wrapper { background:#0B1418; color:#F8FAFC; border:1px solid rgba(0,214,201,.3); border-radius:18px; box-shadow:0 30px 70px -24px rgba(0,0,0,.95); padding:0; overflow:hidden; }
+  .es-map .leaflet-popup-content { margin:0; width:212px !important; }
+  .es-map .leaflet-popup-tip { background:#0B1418; border:1px solid rgba(0,214,201,.3); }
+  .es-map .leaflet-popup-close-button { color:#9BA8B0 !important; }
+  .es-pop img { display:block; width:100%; height:104px; object-fit:cover; }
+  .es-pop .b { padding:13px 14px 14px; }
+  .es-pop .n { font-family:'Space Grotesk',sans-serif; font-size:15.5px; font-weight:600; line-height:1.25; margin-bottom:6px; }
+  .es-pop .t { font-family:'JetBrains Mono',monospace; font-size:11px; color:#67E8F9; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #050A0D; color: #F8FAFC; font-family: Manrope, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #DFFF00; text-decoration: none; }
+  a:hover { color: #B9E900; }
+  button { font-family: inherit; }
+  @keyframes dashflow { to { stroke-dashoffset: -1400; } }
+  @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  @keyframes pulseglow { 0%,100% { opacity: .45; transform: scale(1); } 50% { opacity: 1; transform: scale(1.25); } }
+  @keyframes blip { 0%,100% { opacity: 1; } 50% { opacity: .25; } }
+  @keyframes risein { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes cardin { from { opacity: 0; transform: translateY(18px) scale(.97); } to { opacity: 1; transform: none; } }
+</style>
+</helmet>
+
+<div style="max-width:100%;overflow-x:hidden">
+
+<nav style="position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:16px clamp(20px,4vw,36px);background:rgba(5,10,13,.75);backdrop-filter:blur(18px);border-bottom:1px solid rgba(155,168,176,.12)">
+  <a href="EscapeSync Phase 3.dc.html" style="display:flex;align-items:center;gap:9px;padding:10px 16px;border-radius:100px;background:rgba(16,27,32,.9);border:1px solid rgba(155,168,176,.14);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#9BA8B0;text-decoration:none;white-space:nowrap;order:-1" style-hover="border-color:rgba(0,214,201,.5);color:#67E8F9"><span style="font-size:12px">◀</span>COMMAND CENTER</a>
+  <div style="display:flex;align-items:center;gap:11px">
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="13" stroke="#67E8F9" stroke-opacity=".35" stroke-width="1.5"/>
+      <path d="M5 21c6 0 6-10 11-10s5 10 11 10" stroke="#00D6C9" stroke-width="2.4" stroke-linecap="round"/>
+      <circle cx="16" cy="11" r="4" fill="#DFFF00"/>
+    </svg>
+    <a href="EscapeSync Phase 1.dc.html" data-nav-home="1" style="text-decoration:none;color:inherit;display:inline-flex"><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;letter-spacing:-.3px">Escape<span style="color:#DFFF00">Sync</span></span></a>
+    <span style="margin-left:10px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#9BA8B0">3D MAP EXPLORER</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:6px;padding:5px;border-radius:100px;background:rgba(16,27,32,.9);border:1px solid rgba(155,168,176,.12)">
+    <button onClick="{{ goWeb }}" style="padding:9px 18px;border:none;border-radius:100px;font-size:12px;font-weight:700;letter-spacing:.06em;cursor:pointer;background:{{ tabWebBg }};color:{{ tabWebFg }}">WEB</button>
+    <button onClick="{{ goMobile }}" style="padding:9px 18px;border:none;border-radius:100px;font-size:12px;font-weight:700;letter-spacing:.06em;cursor:pointer;background:{{ tabMobBg }};color:{{ tabMobFg }}">MOBILE</button>
+  </div>
+</nav>
+
+<sc-if value="{{ onWeb }}" hint-placeholder-val="{{ true }}">
+<section data-screen-label="3D map explorer" style="padding:clamp(24px,3vw,36px) clamp(20px,3vw,36px) 60px;animation:risein .4s ease both">
+  <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:22px">
+    <div>
+      <div style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#00D6C9;margin-bottom:12px">
+        <span style="width:6px;height:6px;border-radius:50%;background:#00D6C9;animation:blip 1.8s ease-in-out infinite"></span>DAY 2 · MELAKA · 5 STOPS
+      </div>
+      <h1 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,3.4vw,42px);line-height:1.05;letter-spacing:-.03em;font-weight:700;margin:0">Route in three dimensions</h1>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px">
+      <div style="display:flex;gap:5px;padding:5px;border-radius:100px;background:#101B20;border:1px solid rgba(155,168,176,.12)">
+        <sc-for list="{{ viewModes }}" as="v" hint-placeholder-count="3">
+          <button onClick="{{ v.select }}" style="padding:10px 18px;border:none;border-radius:100px;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.1em;font-weight:500;cursor:pointer;background:{{ v.bg }};color:{{ v.fg }}">{{ v.name }}</button>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:5px;padding:5px;border-radius:100px;background:#101B20;border:1px solid rgba(155,168,176,.12)">
+        <sc-for list="{{ transportModes }}" as="t" hint-placeholder-count="3">
+          <button onClick="{{ t.select }}" style="display:flex;align-items:center;gap:8px;padding:10px 16px;border:none;border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;background:{{ t.bg }};color:{{ t.fg }}"><span>{{ t.glyph }}</span>{{ t.name }}</button>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(620px,100%),1fr));gap:16px;align-items:start">
+    <div style="position:relative;height:clamp(520px,68vh,720px);border-radius:26px;overflow:hidden;border:1px solid rgba(103,232,249,.16);background:linear-gradient(180deg,#0A1C23,#050A0D 70%)">
+      <div ref="{{ mapWebRef }}" class="es-map dark"></div>
+
+      <div style="position:absolute;inset:0;pointer-events:none;z-index:1;background:linear-gradient(180deg,rgba(10,28,35,.85) 0%,rgba(10,28,35,.25) 18%,rgba(5,10,13,0) 42%,rgba(5,10,13,.35) 100%)"></div>
+      <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,rgba(5,10,13,0) 45%,rgba(5,10,13,.55) 100%)"></div>
+
+      <div style="position:absolute;left:18px;top:18px;z-index:2;display:flex;flex-direction:column;gap:8px;pointer-events:none">
+        <span style="padding:8px 13px;border-radius:12px;background:rgba(5,10,13,.7);backdrop-filter:blur(10px);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#67E8F9">{{ modeLabel }}</span>
+        <span style="padding:8px 13px;border-radius:12px;background:rgba(5,10,13,.7);backdrop-filter:blur(10px);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#9BA8B0">{{ transportSummary }}</span>
+      </div>
+
+      <div style="position:absolute;right:18px;top:18px;z-index:2;display:flex;flex-direction:column;gap:9px">
+        <sc-for list="{{ mapControls }}" as="c" hint-placeholder-count="4">
+          <button onClick="{{ c.action }}" style="width:42px;height:42px;border-radius:15px;background:rgba(5,10,13,.72);backdrop-filter:blur(10px);border:1px solid rgba(155,168,176,.18);color:{{ c.color }};font-size:15px;cursor:pointer" style-hover="border-color:rgba(0,214,201,.5)">{{ c.glyph }}</button>
+        </sc-for>
+      </div>
+
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;max-width:420px;width:100%">
+      <sc-if value="{{ cardOpen }}" hint-placeholder-val="{{ true }}">
+      <div style="width:100%;border-radius:24px;overflow:hidden;background:linear-gradient(165deg,#142329,#0B1418);border:1px solid rgba(0,214,201,.3);box-shadow:0 40px 90px -30px rgba(0,0,0,.95);animation:cardin .35s cubic-bezier(.2,.8,.2,1) both">
+        <div style="position:relative;height:132px">
+          <image-slot id="{{ sel.slotKey }}" shape="rect" src="https://commons.wikimedia.org/wiki/Special:FilePath/Dutch%20Square%20Malacca.JPG?width=600" credit="Wikimedia Commons" credit-href="https://commons.wikimedia.org/wiki/Category:Melaka" placeholder="{{ sel.name }}"></image-slot>
+          <span style="position:absolute;left:14px;top:14px;pointer-events:none;padding:5px 11px;border-radius:100px;background:rgba(5,10,13,.8);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.12em;color:#DFFF00">STOP {{ sel.n }} OF 5</span>
+          <button onClick="{{ closeCard }}" style="position:absolute;right:12px;top:12px;width:30px;height:30px;border-radius:11px;background:rgba(5,10,13,.8);border:1px solid rgba(155,168,176,.2);color:#9BA8B0;font-size:12px;cursor:pointer">✕</button>
+        </div>
+        <div style="padding:20px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px">
+            <span style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;line-height:1.2">{{ sel.name }}</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#67E8F9">{{ sel.time }}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
+            <div style="padding:12px;border-radius:14px;background:#101B20"><div style="font-size:10.5px;color:#9BA8B0;margin-bottom:4px">GROUP FIT</div><div style="font-size:15px;font-weight:600;color:#6EE7A8">{{ sel.fit }}</div></div>
+            <div style="padding:12px;border-radius:14px;background:#101B20"><div style="font-size:10.5px;color:#9BA8B0;margin-bottom:4px">COST</div><div style="font-size:15px;font-weight:600">{{ sel.cost }}</div></div>
+            <div style="padding:12px;border-radius:14px;background:#101B20"><div style="font-size:10.5px;color:#9BA8B0;margin-bottom:4px">DISTANCE</div><div style="font-size:15px;font-weight:600">{{ sel.distance }}</div></div>
+            <div style="padding:12px;border-radius:14px;background:#101B20"><div style="font-size:10.5px;color:#9BA8B0;margin-bottom:4px">TRAVEL TIME</div><div style="font-size:15px;font-weight:600">{{ sel.travel }}</div></div>
+          </div>
+          <button onClick="{{ nextStop }}" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:16px;border:none;border-radius:100px;background:#DFFF00;color:#050A0D;font-size:12px;font-weight:800;letter-spacing:.12em;cursor:pointer;box-shadow:0 16px 40px -14px rgba(223,255,0,.55)" style-hover="background:#B9E900">
+            <span style="font-size:14px">➤</span>NEXT STOP
+          </button>
+        </div>
+      </div>
+      </sc-if>
+      <sc-if value="{{ cardClosed }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:20px 22px;border-radius:24px;background:#101B20;border:1px dashed rgba(103,232,249,.28);font-size:13.5px;line-height:1.55;color:#9BA8B0">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.12em;color:#67E8F9;display:block;margin-bottom:8px">EXPLORE</span>
+        Tap any numbered marker on the map to open its photo, timing and group fit.
+      </div>
+      </sc-if>
+      <div style="padding:22px;border-radius:24px;background:#101B20;border:1px solid rgba(155,168,176,.11)">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#9BA8B0;margin-bottom:18px">DAY 2 ROUTE</div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <sc-for list="{{ stops }}" as="s" hint-placeholder-count="5">
+            <button onClick="{{ s.select }}" style="display:flex;align-items:center;gap:13px;text-align:left;cursor:pointer;padding:11px 12px;border:none;border-radius:14px;background:{{ s.rowBg }};color:#F8FAFC" style-hover="background:#142329">
+              <span style="width:26px;height:26px;flex:none;border-radius:50%;background:{{ s.bg }};color:{{ s.fg }};display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700">{{ s.n }}</span>
+              <span style="flex:1;min-width:0">
+                <span style="display:block;font-size:14px;font-weight:600">{{ s.name }}</span>
+                <span style="display:block;font-size:11.5px;color:#9BA8B0">{{ s.time }} · {{ s.cost }} · {{ s.travel }}</span>
+              </span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#6EE7A8">{{ s.fit }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="padding:22px;border-radius:24px;background:linear-gradient(160deg,rgba(0,214,201,.1),rgba(11,20,24,.9));border:1px solid rgba(0,214,201,.28);display:flex;gap:16px;align-items:center">
+        <div style="position:relative;width:58px;height:66px;flex:none;animation:floaty 5s ease-in-out infinite">
+          <div style="position:absolute;left:50%;top:3px;transform:translateX(-50%);width:2px;height:11px;background:#B9E900"></div>
+          <div style="position:absolute;left:50%;top:-3px;transform:translateX(-50%);width:9px;height:9px;border-radius:50%;background:#DFFF00;box-shadow:0 0 12px 3px rgba(223,255,0,.5)"></div>
+          <div style="position:absolute;left:0;top:12px;width:58px;height:50px;border-radius:20px;background:linear-gradient(165deg,#1B2E36,#0B1418);border:1px solid rgba(103,232,249,.24)"></div>
+          <div style="position:absolute;left:7px;top:21px;width:44px;height:30px;border-radius:15px;background:#050A0D;display:flex;align-items:center;justify-content:center;gap:9px">
+            <span style="width:9px;height:9px;border-radius:50%;background:#67E8F9;box-shadow:0 0 10px 2px rgba(103,232,249,.75)"></span>
+            <span style="width:9px;height:9px;border-radius:50%;background:#67E8F9;box-shadow:0 0 10px 2px rgba(103,232,249,.75)"></span>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.12em;color:#67E8F9;margin-bottom:8px">PIP · ROUTE NOTE</div>
+          <div style="font-size:13.5px;line-height:1.55;color:#F8FAFC">{{ pipNote }}</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div style="padding:18px;border-radius:20px;background:#101B20;border:1px solid rgba(155,168,176,.11)"><div style="font-size:11px;color:#9BA8B0;margin-bottom:6px">Total distance</div><div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600">{{ totalDistance }}</div></div>
+        <div style="padding:18px;border-radius:20px;background:#101B20;border:1px solid rgba(155,168,176,.11)"><div style="font-size:11px;color:#9BA8B0;margin-bottom:6px">Moving time</div><div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600">{{ totalTime }}</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+</sc-if>
+
+<sc-if value="{{ onMobile }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="Mobile 3D map" style="padding:clamp(28px,4vw,52px) 20px 70px;display:flex;flex-wrap:wrap;gap:44px;justify-content:center;align-items:flex-start;animation:risein .4s ease both">
+  <div style="width:390px;height:820px;flex:none;position:relative;border-radius:52px;padding:11px;background:linear-gradient(160deg,#22343C,#0B1418);box-shadow:0 60px 120px -40px rgba(0,0,0,.95),inset 0 1px 0 rgba(248,250,252,.14)">
+    <div style="position:relative;width:100%;height:100%;border-radius:42px;overflow:hidden;background:#050A0D">
+
+      <div ref="{{ mapMobRef }}" class="es-map dark"></div>
+
+
+      <div style="position:absolute;left:0;right:0;top:0;z-index:2;padding:14px 18px 16px;background:linear-gradient(180deg,rgba(5,10,13,.92),rgba(5,10,13,0))">
+        <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0;margin-bottom:14px"><span>9:41</span><span>◍ ◈ ▮</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:#F8FAFC">DAY 2 · MELAKA</div>
+          <div style="width:30px;height:30px;border-radius:50%;overflow:hidden;border:1px solid rgba(103,232,249,.3)"><image-slot id="crew2-alice" shape="circle" placeholder="A"></image-slot></div>
+        </div>
+        <div style="display:flex;gap:5px;padding:4px;border-radius:100px;background:rgba(16,27,32,.85);backdrop-filter:blur(10px);border:1px solid rgba(155,168,176,.14);width:max-content">
+          <sc-for list="{{ mobileTabs }}" as="t" hint-placeholder-count="2">
+            <button onClick="{{ t.select }}" style="padding:9px 26px;border:none;border-radius:100px;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.12em;cursor:pointer;background:{{ t.bg }};color:{{ t.fg }}">{{ t.name }}</button>
+          </sc-for>
+        </div>
+      </div>
+
+      <sc-if value="{{ mobileList }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;left:0;right:0;top:132px;bottom:0;z-index:3;padding:14px;background:rgba(5,10,13,.92);backdrop-filter:blur(16px);overflow-y:auto;animation:risein .3s ease both">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <sc-for list="{{ stops }}" as="s" hint-placeholder-count="5">
+            <button onClick="{{ s.selectMap }}" style="display:flex;align-items:center;gap:13px;text-align:left;cursor:pointer;padding:14px;border-radius:18px;background:#101B20;border:1px solid {{ s.listBorder }};color:#F8FAFC">
+              <span style="width:44px;height:44px;flex:none;border-radius:14px;background:{{ s.bg }};color:#050A0D;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700">{{ s.n }}</span>
+              <span style="flex:1;min-width:0">
+                <span style="display:block;font-size:14.5px;font-weight:600">{{ s.name }}</span>
+                <span style="display:block;font-size:11.5px;color:#9BA8B0">{{ s.time }} · {{ s.distance }} · {{ s.travel }}</span>
+              </span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#6EE7A8">{{ s.fit }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ mobileMap }}" hint-placeholder-val="{{ true }}">
+      <div style="position:absolute;right:16px;top:190px;z-index:2;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ mapControls }}" as="c" hint-placeholder-count="4">
+          <button onClick="{{ c.action }}" style="width:44px;height:44px;border-radius:50%;background:rgba(5,10,13,.78);backdrop-filter:blur(10px);border:1px solid rgba(155,168,176,.2);color:{{ c.color }};font-size:15px;cursor:pointer">{{ c.glyph }}</button>
+        </sc-for>
+      </div>
+      </sc-if>
+
+      <div style="position:absolute;left:14px;right:14px;bottom:16px;z-index:2;padding:18px;border-radius:26px;background:rgba(11,20,24,.94);backdrop-filter:blur(22px);border:1px solid rgba(0,214,201,.3);box-shadow:0 30px 70px -24px rgba(0,0,0,.95)">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.14em;color:#DFFF00">NEXT STOP</span>
+          <span style="display:flex;align-items:center;gap:7px;font-size:11px;color:#9BA8B0"><span style="width:6px;height:6px;border-radius:50%;background:#00D6C9;animation:blip 1.6s ease-in-out infinite"></span>ON TRACK</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="width:52px;height:52px;flex:none;border-radius:16px;overflow:hidden"><image-slot id="{{ nextSlotKey }}" shape="rounded" radius="16" src="https://commons.wikimedia.org/wiki/Special:FilePath/Dutch%20Square%20Malacca.JPG?width=600" credit="Wikimedia Commons" credit-href="https://commons.wikimedia.org/wiki/Category:Melaka" placeholder="{{ nextName }}"></image-slot></div>
+          <div style="flex:1;min-width:0">
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:600;margin-bottom:3px">{{ nextName }}</div>
+            <div style="font-size:12px;color:#9BA8B0">{{ nextMeta }}</div>
+          </div>
+          <button onClick="{{ openStop3 }}" style="padding:14px 20px;border:none;border-radius:100px;background:#DFFF00;color:#050A0D;font-size:11px;font-weight:800;letter-spacing:.1em;cursor:pointer">DETAILS</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width:340px;min-width:260px;display:flex;flex-direction:column;gap:16px">
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#00D6C9;margin-bottom:12px">MOBILE · DAY 2</div>
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-size:30px;line-height:1.1;letter-spacing:-.03em;font-weight:700;margin:0 0 12px">Same route, one thumb</h2>
+      <p style="font-size:14.5px;line-height:1.6;color:#9BA8B0;margin:0">The portrait map keeps the next stop pinned at the bottom, controls within thumb reach, and the full list one tap away.</p>
+    </div>
+    <div style="padding:20px;border-radius:22px;background:#101B20;border:1px solid rgba(155,168,176,.11);display:flex;flex-direction:column;gap:14px">
+      <sc-for list="{{ mobileNotes }}" as="n" hint-placeholder-count="4">
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <span style="width:30px;height:30px;flex:none;border-radius:11px;background:rgba(103,232,249,.12);display:flex;align-items:center;justify-content:center;color:#67E8F9;font-size:14px">{{ n.glyph }}</span>
+          <span style="font-size:13px;line-height:1.55;color:#9BA8B0"><span style="color:#F8FAFC;font-weight:600">{{ n.title }}</span> — {{ n.text }}</span>
+        </div>
+      </sc-for>
+    </div>
+    <button onClick="{{ goWeb }}" style="padding:16px 26px;border-radius:100px;border:1px solid rgba(248,250,252,.2);background:rgba(248,250,252,.04);color:#F8FAFC;font-size:12px;font-weight:700;letter-spacing:.12em;cursor:pointer" style-hover="border-color:rgba(248,250,252,.45)">SEE THE WEB EXPLORER</button>
+  </div>
+</section>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:950}}">
+const P = (n) => "https://commons.wikimedia.org/wiki/Special:FilePath/" + encodeURIComponent(n) + "?width=500";
+
+const STOPS = [
+  { n: 1, name: "Dutch Square", time: "09:00", fit: "94%", cost: "RM0", distance: "0 km", travel: "—",
+    lat: 2.194440, lng: 102.248610, photo: P("Dutch Square Malacca.JPG"), credit: "Wikimedia Commons" },
+  { n: 2, name: "Jonker Street", time: "10:40", fit: "96%", cost: "RM40", distance: "0.4 km", travel: "6 min",
+    lat: 2.195530, lng: 102.246720, photo: P("Jalan Hang Kasturi during Jonker Street Night Market in Melaka, Malaysia.jpg"), credit: "Wikimedia Commons" },
+  { n: 3, name: "A Famosa", time: "12:30", fit: "74%", cost: "RM0", distance: "0.7 km", travel: "9 min",
+    lat: 2.192170, lng: 102.250600, photo: P("010187 00001 A Famosa (Porta de Santiago), Melaka - Malaysia.jpg"), credit: "Wikimedia Commons" },
+  { n: 4, name: "Melaka River Cruise", time: "15:00", fit: "92%", cost: "RM30", distance: "0.6 km", travel: "8 min",
+    lat: 2.196080, lng: 102.248420, photo: P("Melaka River Cruise.jpg"), credit: "Wikimedia Commons" },
+  { n: 5, name: "St. Paul's Hill", time: "17:30", fit: "88%", cost: "RM0", distance: "0.5 km", travel: "7 min",
+    lat: 2.191950, lng: 102.249530, photo: P("St. Paul's Church Malacca 2012.JPG"), credit: "Wikimedia Commons" }
+];
+
+const CREW = [
+  { initial: "A", lat: 2.19742, lng: 102.24688 },
+  { initial: "B", lat: 2.19268, lng: 102.24672 },
+  { initial: "C", lat: 2.19668, lng: 102.25148 },
+  { initial: "D", lat: 2.19052, lng: 102.25142 }
+];
+
+const TILES = {
+  MAP: { url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png", dark: true, zoom: 16,
+    attr: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' },
+  "3D": { url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png", dark: true, deep: true, zoom: 18,
+    attr: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' },
+  SATELLITE: { url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", dark: false, zoom: 16,
+    attr: 'Imagery &copy; Esri, Maxar, Earthstar Geographics' }
+};
+
+const CENTER = [2.19425, 102.24865];
+
+const CONTROLS = [
+  { glyph: "➤", color: "#DFFF00", act: "fit" },
+  { glyph: "＋", color: "#9BA8B0", act: "in" },
+  { glyph: "－", color: "#67E8F9", act: "out" },
+  { glyph: "◎", color: "#9BA8B0", act: "home" }
+];
+
+class Component extends DCLogic {
+  state = {
+    screen: window.location.hash === "#mobile" ? "mobile" : "web",
+    mode: "3D",
+    transport: "Walk",
+    selected: window.location.hash === "#stop-3" ? 3 : window.location.hash === "#compare" ? 4 : 0,
+    mobileTab: "MAP"
+  };
+
+  mapWebRef = React.createRef();
+  mapMobRef = React.createRef();
+
+  popupHtml(st) {
+    return '<div class="es-pop"><img src="' + st.photo + '" alt=""><div class="b">'
+      + '<div class="n">' + st.name + '</div>'
+      + '<div class="t">VISIT ' + st.time + ' · ' + st.fit + ' GROUP FIT</div>'
+      + '</div></div>';
+  }
+
+  // The live map is stashed on the container element itself, so every call
+  // site resolves it from the ref at call time — no stale cache.
+  live() {
+    return [this.mapWebRef.current, this.mapMobRef.current]
+      .filter(el => el && el._esMap && document.contains(el))
+      .map(el => el._esMap);
+  }
+
+  _timers = [];
+  _later(ms, fn) { this._timers.push(setTimeout(() => { if (this.state) fn(); }, ms)); }
+
+  fit(entry) {
+    if (!this.state || !entry || !window.L) return;
+    if (!entry.el || !document.contains(entry.el) || !entry.el.clientHeight || !entry.el.clientWidth) return;
+    const bounds = window.L.latLngBounds(STOPS.map(s => [s.lat, s.lng])).pad(0.28);
+    if (!bounds.isValid()) return;
+    try { entry.map.invalidateSize(); entry.map.fitBounds(bounds, { animate: false }); } catch (e) {}
+  }
+
+  build(el) {
+    if (!this.state || !el || !window.L) return;
+    if (el._esMap) {
+      if (document.contains(el)) return;
+      try { el._esMap.map.remove(); } catch (e) {}
+      el._esMap = null;
+    }
+    if (!el.clientHeight || !el.clientWidth) return;
+    const L = window.L;
+    if (el._leaflet_id) { el._leaflet_id = undefined; el.innerHTML = ""; }
+    try {
+      const cfg = TILES[this.state.mode];
+      const map = L.map(el, { center: CENTER, zoom: cfg.zoom, zoomControl: false, scrollWheelZoom: true, attributionControl: true, zoomAnimation: false, markerZoomAnimation: false, fadeAnimation: false });
+      const tiles = L.tileLayer(cfg.url, { maxZoom: 19, attribution: cfg.attr }).addTo(map);
+      const line = STOPS.map(s => [s.lat, s.lng]);
+      L.polyline(line, { color: "#050A0D", weight: 12, opacity: .55, lineCap: "round" }).addTo(map);
+      L.polyline(line, { color: "#00D6C9", weight: 6, opacity: 1, lineCap: "round", className: "es-route" }).addTo(map);
+      L.polyline(line, { color: "#F8FAFC", weight: 2.5, opacity: .9, lineCap: "round", className: "es-dash" }).addTo(map);
+      CREW.forEach(c => {
+        L.marker([c.lat, c.lng], { icon: L.divIcon({ className: "", html: '<div class="es-crew">' + c.initial + '</div>', iconSize: [22, 22], iconAnchor: [11, 11] }), interactive: false, zIndexOffset: -500 }).addTo(map);
+      });
+      const markers = {};
+      STOPS.forEach(st => {
+        const m = L.marker([st.lat, st.lng], {
+          icon: L.divIcon({ className: "", html: '<div class="es-pin' + (st.n === this.state.selected ? ' on' : '') + '"><b>' + st.n + '</b><i>' + st.name + '</i></div>', iconSize: [110, 58], iconAnchor: [55, 58] }),
+          zIndexOffset: st.n * 10
+        }).addTo(map);
+        m.bindPopup(this.popupHtml(st), { offset: [0, -46], closeButton: true, maxWidth: 212 });
+        m.on("click", () => this.setState({ selected: st.n }));
+        markers[st.n] = m;
+      });
+      el.classList.toggle("dark", cfg.dark && !cfg.deep);
+      el.classList.toggle("deep", !!cfg.deep);
+      const entry = { map, tiles, markers, el };
+      el._esMap = entry;
+      this.fit(entry);
+      requestAnimationFrame(() => { if (this.state) this.fit(el._esMap); });
+      this._later(400, () => this.fit(el._esMap));
+    } catch (err) {
+      console.error("EscapeSync map init failed", err && err.message ? err.message : err);
+      if (el._leaflet_id) { el._leaflet_id = undefined; el.innerHTML = ""; }
+    }
+  }
+
+  syncTiles() {
+    if (!this.state) return;
+    const cfg = TILES[this.state.mode];
+    this.live().forEach(({ map, tiles, el }) => {
+      try {
+        tiles.setUrl(cfg.url);
+        el.classList.toggle("dark", cfg.dark && !cfg.deep);
+        el.classList.toggle("deep", !!cfg.deep);
+        map.setZoom(cfg.zoom, { animate: false });
+        map.invalidateSize();
+      } catch (e) {}
+    });
+  }
+
+  ensure = () => {
+    if (!this.state) return;
+    if (!window.L) { this._later(120, this.ensure); return; }
+    this.build(this.mapWebRef.current);
+    this.build(this.mapMobRef.current);
+  };
+
+  componentDidMount() { this.ensure(); [80, 250, 700, 1400].forEach(t => this._later(t, this.ensure)); window.addEventListener("resize", this.ensure); }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.ensure);
+    this._timers.forEach(clearTimeout);
+    this._timers = [];
+    [this.mapWebRef.current, this.mapMobRef.current].forEach(el => {
+      if (el && el._esMap) { try { el._esMap.map.remove(); } catch (e) {} el._esMap = null; }
+    });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    this.ensure();
+    [60, 300].forEach(t => this._later(t, this.ensure));
+    const prev = prevState || {};
+    if (prev.mode !== this.state.mode) this.syncTiles();
+    if (prev.selected !== this.state.selected) {
+      const st = STOPS.find(x => x.n === this.state.selected);
+      this.live().forEach(({ map, markers }) => {
+        Object.keys(markers).forEach(k => {
+          const mel = markers[k].getElement();
+          const pin = mel && mel.querySelector(".es-pin");
+          if (pin) pin.classList.toggle("on", Number(k) === this.state.selected);
+        });
+        if (!st) return;
+        try {
+          map.panTo([st.lat, st.lng], { animate: false });
+          if (markers[st.n]) markers[st.n].openPopup();
+        } catch (e) {}
+      });
+    }
+  }
+
+  control(act) {
+    if (!this.state) return;
+    this.live().forEach(entry => {
+      const map = entry.map;
+      if (act === "in") map.zoomIn();
+      else if (act === "out") map.zoomOut();
+      else if (act === "home") map.setView(CENTER, TILES[this.state.mode].zoom);
+      else this.fit(entry);
+    });
+  }
+
+  renderVals() {
+    const s = this.state;
+    const pill = (on) => ({ bg: on ? "#DFFF00" : "transparent", fg: on ? "#050A0D" : "#9BA8B0" });
+    const tw = pill(s.screen === "web"), tm = pill(s.screen === "mobile");
+
+    const transportMeta = [["Walk", "⏙", "2.2 km · 34 min walking"], ["Car", "◈", "2.2 km · 11 min by Grab"], ["Public Transit", "◍", "2.2 km · 21 min by bus"]];
+    const transportModes = transportMeta.map(([name, glyph]) => {
+      const on = s.transport === name;
+      return { name: name === "Public Transit" ? "Transit" : name, glyph,
+        select: () => this.setState({ transport: name }),
+        bg: on ? "rgba(0,214,201,.18)" : "transparent",
+        fg: on ? "#67E8F9" : "#9BA8B0" };
+    });
+    const activeTransport = transportMeta.find(t => t[0] === s.transport);
+
+    const viewModes = ["MAP", "SATELLITE", "3D"].map(name => {
+      const on = s.mode === name;
+      return { name, select: () => this.setState({ mode: name }),
+        bg: on ? "#DFFF00" : "transparent", fg: on ? "#050A0D" : "#9BA8B0" };
+    });
+
+    const stops = STOPS.map(st => {
+      const on = s.selected === st.n;
+      return { ...st,
+        bg: on ? "#DFFF00" : "#00D6C9", fg: "#050A0D",
+        rowBg: on ? "#142329" : "transparent",
+        listBorder: on ? "rgba(223,255,0,.4)" : "rgba(155,168,176,.11)",
+        slotKey: "stop-" + st.n,
+        select: () => this.setState({ selected: st.n }),
+        selectMap: () => this.setState({ selected: st.n, mobileTab: "MAP" }) };
+    });
+
+    const sel = stops.find(x => x.n === s.selected) || stops[3];
+    const next = stops.find(x => x.n === (s.selected >= 5 ? 1 : s.selected + 1)) || stops[0];
+
+    const pipNotes = {
+      Walk: "A Famosa and St. Paul's Hill are both open-air. If rain lands before 15:00 I'll swap them for the Maritime Museum — 6 min away, indoors.",
+      Car: "A Grab between Jonker Street and A Famosa keeps David's walking under his limit and saves 14 minutes.",
+      "Public Transit": "Panorama bus M100 covers Dutch Square to A Famosa for RM2 each — Chris's cheapest option today."
+    };
+
+    const mobileTabs = ["MAP", "LIST"].map(name => {
+      const on = s.mobileTab === name;
+      return { name, select: () => this.setState({ mobileTab: name, ...(name === "MAP" ? {} : {}) }),
+        bg: on ? "#DFFF00" : "transparent", fg: on ? "#050A0D" : "#9BA8B0" };
+    });
+
+    return {
+      onWeb: s.screen === "web", onMobile: s.screen === "mobile",
+      goWeb: () => { this.setState({ screen: "web" }); window.scrollTo(0, 0); },
+      goMobile: () => { this.setState({ screen: "mobile" }); window.scrollTo(0, 0); },
+      tabWebBg: tw.bg, tabWebFg: tw.fg, tabMobBg: tm.bg, tabMobFg: tm.fg,
+      viewModes, transportModes,
+      modeLabel: s.mode + " VIEW · MELAKA",
+      transportSummary: activeTransport[2],
+      stops,
+      mapWebRef: this.mapWebRef, mapMobRef: this.mapMobRef,
+      cardOpen: s.selected > 0, cardClosed: s.selected === 0, sel, closeCard: () => this.setState({ selected: 0 }),
+      nextStop: () => this.setState({ selected: s.selected >= 5 ? 1 : s.selected + 1 }),
+      nextName: next.name, nextPhoto: next.photo, nextSlotKey: "next-" + next.n,
+      nextMeta: next.time + " · " + next.distance + " · " + next.travel,
+      openStop3: () => this.setState({ selected: next.n, mobileTab: "MAP" }),
+      mapControls: CONTROLS.map(c => ({ ...c, action: () => this.control(c.act) })),
+      pipNote: pipNotes[s.transport],
+      totalDistance: "2.2 km", totalTime: activeTransport[2].split("· ")[1],
+      mobileTabs, mobileMap: s.mobileTab === "MAP", mobileList: s.mobileTab === "LIST",
+      mobileNotes: [
+        { glyph: "➤", title: "Navigation", text: "hands off the next leg to turn-by-turn." },
+        { glyph: "＋", title: "Zoom", text: "pinch or tap to move through the old town." },
+        { glyph: "－", title: "Overview", text: "pulls back to the whole day's route." },
+        { glyph: "◎", title: "Locate", text: "recentres on the crew, not just you." }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<script src="./app.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #050A0D; color: #F8FAFC; font-family: Manrope, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #DFFF00; text-decoration: none; }
+  a:hover { color: #B9E900; }
+  button, input, textarea { font-family: inherit; }
+  textarea::placeholder, input::placeholder { color: #5C6B73; }
+  @keyframes dashflow { to { stroke-dashoffset: -1400; } }
+  @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  @keyframes pulseglow { 0%,100% { opacity: .45; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } }
+  @keyframes blip { 0%,100% { opacity: 1; } 50% { opacity: .25; } }
+  @keyframes risein { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+  @keyframes spinring { to { transform: rotate(360deg); } }
+  @keyframes sheen { 0% { transform: translateX(-120%); } 100% { transform: translateX(260%); } }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-3px); } 40% { transform: translateX(3px); } 60% { transform: translateX(-2px); } 80% { transform: translateX(2px); } }
+</style>
+</helmet>
+
+<div style="max-width:100%;overflow-x:hidden;min-height:100vh">
+
+<nav style="position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:16px clamp(20px,4vw,36px);background:rgba(5,10,13,.75);backdrop-filter:blur(18px);border-bottom:1px solid rgba(155,168,176,.12)">
+  <a href="EscapeSync Phase 3.dc.html" style="display:flex;align-items:center;gap:9px;padding:10px 16px;border-radius:100px;background:rgba(16,27,32,.9);border:1px solid rgba(155,168,176,.14);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#9BA8B0;text-decoration:none;white-space:nowrap;order:-1" style-hover="border-color:rgba(0,214,201,.5);color:#67E8F9"><span style="font-size:12px">◀</span>COMMAND CENTER</a>
+  <div style="display:flex;align-items:center;gap:11px">
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="13" stroke="#67E8F9" stroke-opacity=".35" stroke-width="1.5"/>
+      <path d="M5 21c6 0 6-10 11-10s5 10 11 10" stroke="#00D6C9" stroke-width="2.4" stroke-linecap="round"/>
+      <circle cx="16" cy="11" r="4" fill="#DFFF00"/>
+    </svg>
+    <a href="EscapeSync Phase 1.dc.html" data-nav-home="1" style="text-decoration:none;color:inherit;display:inline-flex"><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;letter-spacing:-.3px">Escape<span style="color:#DFFF00">Sync</span></span></a>
+    <span style="margin-left:10px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#9BA8B0">RESCUE MODE</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:6px;padding:5px;border-radius:100px;background:rgba(16,27,32,.9);border:1px solid rgba(155,168,176,.12);flex-wrap:wrap">
+    <sc-for list="{{ navTabs }}" as="t" hint-placeholder-count="4">
+      <button onClick="{{ t.select }}" style="padding:9px 17px;border:none;border-radius:100px;font-size:11.5px;font-weight:700;letter-spacing:.06em;cursor:pointer;background:{{ t.bg }};color:{{ t.fg }}">{{ t.name }}</button>
+    </sc-for>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;padding:9px 15px;border-radius:100px;background:rgba(0,214,201,.08);border:1px solid rgba(0,214,201,.28);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#67E8F9">
+    <span style="width:6px;height:6px;border-radius:50%;background:#00D6C9;animation:blip 1.8s ease-in-out infinite"></span>THE AI PROPOSES · ESCAPESYNC VALIDATES
+  </div>
+</nav>
+
+<sc-if value="{{ onTrigger }}" hint-placeholder-val="{{ true }}">
+<section data-screen-label="Rescue trigger" style="position:relative;padding:clamp(36px,5vw,64px) clamp(20px,4vw,36px) 90px;animation:risein .4s ease both">
+  <div style="position:absolute;top:-120px;left:50%;transform:translateX(-50%);width:900px;height:420px;pointer-events:none;background:radial-gradient(ellipse at center,rgba(255,184,77,.14),rgba(255,184,77,0) 70%);filter:blur(20px)"></div>
+  <div style="position:relative;max-width:1100px;margin:0 auto">
+
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:26px;margin-bottom:clamp(30px,4vw,46px)">
+      <div style="max-width:620px">
+        <div style="display:inline-flex;align-items:center;gap:10px;padding:7px 14px;border-radius:100px;border:1px solid rgba(255,184,77,.35);background:rgba(255,184,77,.08);font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:#FFB84D;margin-bottom:24px">
+          <span style="width:6px;height:6px;border-radius:50%;background:#FFB84D;animation:blip 1.5s ease-in-out infinite"></span>
+          DAY 2 · MELAKA · 14:00
+        </div>
+        <h1 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(36px,5.6vw,62px);line-height:1.02;letter-spacing:-.035em;font-weight:700;margin:0 0 16px;text-wrap:balance">Something went wrong?</h1>
+        <p style="font-size:18px;line-height:1.6;color:#9BA8B0;margin:0">Tell EscapeSync what changed.</p>
+      </div>
+      <div style="display:flex;gap:14px;align-items:center;padding:20px 22px;border-radius:24px;background:linear-gradient(160deg,rgba(0,214,201,.1),rgba(11,20,24,.92));border:1px solid rgba(0,214,201,.28);max-width:400px">
+        <div style="position:relative;width:66px;height:76px;flex:none;animation:floaty 5s ease-in-out infinite">
+          <div style="position:absolute;left:50%;top:3px;transform:translateX(-50%);width:2px;height:13px;background:#B9E900"></div>
+          <div style="position:absolute;left:50%;top:-3px;transform:translateX(-50%);width:10px;height:10px;border-radius:50%;background:#DFFF00;box-shadow:0 0 14px 4px rgba(223,255,0,.55);animation:pulseglow 2.4s ease-in-out infinite"></div>
+          <div style="position:absolute;left:0;top:14px;width:66px;height:57px;border-radius:23px;background:linear-gradient(165deg,#1B2E36,#0B1418);border:1px solid rgba(103,232,249,.24);box-shadow:inset 0 1px 0 rgba(248,250,252,.14)"></div>
+          <div style="position:absolute;left:8px;top:25px;width:50px;height:34px;border-radius:17px;background:#050A0D;border:1px solid rgba(103,232,249,.18);display:flex;align-items:center;justify-content:center;gap:10px">
+            <span style="width:10px;height:10px;border-radius:50%;background:#67E8F9;box-shadow:0 0 11px 2px rgba(103,232,249,.75)"></span>
+            <span style="width:10px;height:10px;border-radius:50%;background:#67E8F9;box-shadow:0 0 11px 2px rgba(103,232,249,.75)"></span>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.12em;color:#67E8F9;margin-bottom:8px">PIP</div>
+          <div style="font-size:13.5px;line-height:1.55">Don't worry. I'll protect what still works and rebuild only what needs changing.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:14px;margin-bottom:18px">
+      <sc-for list="{{ presets }}" as="p" hint-placeholder-count="6">
+        <button onClick="{{ p.select }}" style="position:relative;overflow:hidden;text-align:left;cursor:pointer;padding:24px;border-radius:24px;background:{{ p.bg }};border:1px solid {{ p.border }};color:#F8FAFC" style-hover="border-color:rgba(223,255,0,.45)">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px">
+            <span style="width:48px;height:48px;border-radius:16px;background:{{ p.iconBg }};display:flex;align-items:center;justify-content:center;font-size:20px;color:{{ p.iconFg }}">{{ p.glyph }}</span>
+            <span style="width:22px;height:22px;border-radius:50%;border:2px solid {{ p.checkBorder }};background:{{ p.checkBg }};display:flex;align-items:center;justify-content:center;font-size:11px;color:#050A0D">{{ p.check }}</span>
+          </div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:600;margin-bottom:6px">{{ p.name }}</div>
+          <div style="font-size:12.5px;line-height:1.5;color:#9BA8B0">{{ p.hint }}</div>
+        </button>
+      </sc-for>
+    </div>
+
+    <div style="padding:24px;border-radius:24px;background:#101B20;border:1px solid rgba(155,168,176,.11);margin-bottom:18px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#9BA8B0;margin-bottom:14px">DESCRIBE WHAT HAPPENED</div>
+      <textarea value="{{ note }}" onChange="{{ setNote }}" rows="2" placeholder="The museum is closed because of a public holiday." style="width:100%;resize:vertical;padding:16px 18px;border-radius:16px;background:#0B1418;border:1px solid rgba(155,168,176,.16);color:#F8FAFC;font-size:15px;line-height:1.55;outline:none" style-focus="border-color:rgba(0,214,201,.6)"></textarea>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:14px">
+        <sc-for list="{{ protectChips }}" as="c" hint-placeholder-count="3">
+          <span style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:100px;background:rgba(110,231,168,.08);border:1px solid rgba(110,231,168,.26);font-size:12px;color:#F8FAFC">
+            <span style="color:#6EE7A8">✓</span>{{ c }}
+          </span>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:18px">
+      <div style="font-size:13px;color:#9BA8B0">{{ triggerSummary }}</div>
+      <button onClick="{{ startRescue }}" style="position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;padding:22px 38px;border:none;border-radius:100px;background:#DFFF00;color:#050A0D;font-size:14px;font-weight:800;letter-spacing:.11em;cursor:pointer;box-shadow:0 22px 60px -16px rgba(223,255,0,.6)" style-hover="background:#B9E900">
+        <span style="width:26px;height:26px;border-radius:50%;background:rgba(5,10,13,.14);display:flex;align-items:center;justify-content:center;font-size:14px">⚡</span>
+        RESCUE MY DAY
+      </button>
+    </div>
+  </div>
+</section>
+</sc-if>
+
+<sc-if value="{{ onProcessing }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="Rescue processing" style="position:relative;min-height:calc(100vh - 68px);display:flex;align-items:center;padding:clamp(36px,5vw,60px) clamp(20px,4vw,36px);overflow:hidden;animation:risein .4s ease both">
+  <div style="position:absolute;inset:0;pointer-events:none;opacity:.5">
+    <svg viewBox="0 0 1440 800" preserveAspectRatio="none" style="width:100%;height:100%">
+      <defs>
+        <linearGradient id="procRoute" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0%" stop-color="#00D6C9"/><stop offset="60%" stop-color="#67E8F9"/><stop offset="100%" stop-color="#DFFF00"/>
+        </linearGradient>
+      </defs>
+      <g stroke="rgba(103,232,249,.07)" stroke-width="1.4">
+        <path d="M0 700 L1440 600"/><path d="M0 560 L1440 460"/><path d="M0 420 L1440 320"/><path d="M0 280 L1440 180"/>
+        <path d="M240 800 L240 0"/><path d="M560 800 L560 0"/><path d="M880 800 L880 0"/><path d="M1200 800 L1200 0"/>
+      </g>
+      <path d="M-40 640 C 260 620 420 470 700 420 S 1100 300 1480 220" stroke="url(#procRoute)" stroke-width="5" fill="none" stroke-linecap="round" style="filter:drop-shadow(0 0 14px rgba(0,214,201,.7))"/>
+      <path d="M-40 640 C 260 620 420 470 700 420 S 1100 300 1480 220" stroke="#F8FAFC" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-dasharray="30 260" style="animation:dashflow 4s linear infinite"/>
+    </svg>
+  </div>
+  <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,rgba(5,10,13,.2) 20%,rgba(5,10,13,.9) 90%)"></div>
+
+  <div style="position:relative;width:100%;max-width:760px;margin:0 auto">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:20px;justify-content:space-between;margin-bottom:34px">
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.14em;color:#FFB84D;margin-bottom:14px">REASON · {{ reasonTag }}</div>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,4vw,42px);line-height:1.08;letter-spacing:-.03em;font-weight:700;margin:0">{{ procHeadline }}</h2>
+      </div>
+      <div style="position:relative;width:104px;height:104px;flex:none">
+        <svg viewBox="0 0 104 104" style="width:104px;height:104px;transform:rotate(-90deg)">
+          <circle cx="52" cy="52" r="44" fill="none" stroke="rgba(155,168,176,.14)" stroke-width="8"/>
+          <circle cx="52" cy="52" r="44" fill="none" stroke="#DFFF00" stroke-width="8" stroke-linecap="round" stroke-dasharray="{{ procDash }}" style="filter:drop-shadow(0 0 10px rgba(223,255,0,.5));transition:stroke-dasharray .5s ease"/>
+        </svg>
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700">{{ procPct }}</div>
+      </div>
+    </div>
+
+    <div style="padding:clamp(22px,3vw,32px);border-radius:26px;background:rgba(16,27,32,.9);backdrop-filter:blur(16px);border:1px solid rgba(155,168,176,.14);display:flex;flex-direction:column;gap:6px">
+      <sc-for list="{{ steps }}" as="st" hint-placeholder-count="6">
+        <div style="display:flex;align-items:center;gap:16px;padding:15px 16px;border-radius:18px;background:{{ st.rowBg }};border:1px solid {{ st.rowBorder }}">
+          <span style="position:relative;width:34px;height:34px;flex:none;border-radius:50%;background:{{ st.iconBg }};display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:{{ st.iconFg }}">
+            {{ st.icon }}
+            <sc-if value="{{ st.spinning }}" hint-placeholder-val="{{ false }}">
+              <span style="position:absolute;inset:-4px;border-radius:50%;border:2px solid rgba(223,255,0,.25);border-top-color:#DFFF00;animation:spinring .9s linear infinite"></span>
+            </sc-if>
+          </span>
+          <span style="flex:1;min-width:0">
+            <span style="display:block;font-family:'Space Grotesk',sans-serif;font-size:15.5px;font-weight:600;letter-spacing:.02em;color:{{ st.titleColor }}">{{ st.label }}</span>
+            <span style="display:block;font-size:12.5px;color:#9BA8B0;margin-top:3px">{{ st.detail }}</span>
+          </span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:{{ st.stateColor }};white-space:nowrap">{{ st.state }}</span>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;margin-top:24px">
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        <sc-for list="{{ procBadges }}" as="b" hint-placeholder-count="4">
+          <span style="padding:9px 15px;border-radius:100px;background:{{ b.bg }};border:1px solid {{ b.border }};font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:{{ b.color }}">{{ b.label }}</span>
+        </sc-for>
+      </div>
+      <sc-if value="{{ procDone }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ goChanged }}" style="padding:19px 34px;border:none;border-radius:100px;background:#DFFF00;color:#050A0D;font-size:13px;font-weight:800;letter-spacing:.11em;cursor:pointer;box-shadow:0 20px 50px -14px rgba(223,255,0,.55)" style-hover="background:#B9E900">SEE WHAT CHANGED</button>
+      </sc-if>
+    </div>
+  </div>
+</section>
+</sc-if>
+
+<sc-if value="{{ onChanged }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="What changed" style="padding:clamp(36px,5vw,60px) clamp(20px,4vw,36px) 90px;animation:risein .4s ease both">
+  <div style="max-width:1160px;margin:0 auto">
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:22px;margin-bottom:clamp(26px,4vw,40px)">
+      <div>
+        <div style="display:inline-flex;align-items:center;gap:9px;padding:7px 14px;border-radius:100px;background:rgba(255,184,77,.1);border:1px solid rgba(255,184,77,.35);font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:#FFB84D;margin-bottom:22px">REASON · {{ reasonTag }}</div>
+        <h1 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(34px,5vw,54px);line-height:1.04;letter-spacing:-.035em;font-weight:700;margin:0 0 14px">What changed?</h1>
+        <p style="font-size:17px;line-height:1.6;color:#9BA8B0;margin:0">Here's how EscapeSync rescued your day.</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;padding:18px 22px;border-radius:22px;background:#101B20;border:1px solid rgba(223,255,0,.22)">
+        <div style="position:relative;width:64px;height:64px;flex:none">
+          <svg viewBox="0 0 64 64" style="width:64px;height:64px;transform:rotate(-90deg)">
+            <circle cx="32" cy="32" r="27" fill="none" stroke="rgba(155,168,176,.16)" stroke-width="6"/>
+            <circle cx="32" cy="32" r="27" fill="none" stroke="#DFFF00" stroke-width="6" stroke-linecap="round" stroke-dasharray="155 170"/>
+          </svg>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700">91</div>
+        </div>
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.12em;color:#9BA8B0;margin-bottom:6px">TRIP HEALTH AFTER RESCUE</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600">71 → <span style="color:#DFFF00">91</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:16px;margin-bottom:16px;align-items:start">
+      <div style="padding:24px;border-radius:26px;background:#0B1418;border:1px solid rgba(155,168,176,.13)">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px">
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;letter-spacing:.02em">PLAN A</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.12em;color:#9BA8B0">ORIGINAL · AT RISK</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <sc-for list="{{ planA }}" as="a" hint-placeholder-count="5">
+            <div style="display:flex;align-items:center;gap:14px;padding:15px 16px;border-radius:18px;background:#101B20;border:1px solid {{ a.border }};opacity:{{ a.opacity }}">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:{{ a.timeColor }};white-space:nowrap">{{ a.time }}</span>
+              <span style="flex:1;min-width:0;font-size:14.5px;font-weight:600;text-decoration:{{ a.strike }}">{{ a.name }}</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;padding:5px 10px;border-radius:100px;background:{{ a.tagBg }};color:{{ a.tagColor }};white-space:nowrap">{{ a.tag }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="position:relative;padding:24px;border-radius:26px;background:linear-gradient(165deg,#142329,#0B1418);border:1px solid rgba(223,255,0,.28);box-shadow:0 0 70px -34px rgba(223,255,0,.5)">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px">
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;letter-spacing:.02em">PLAN B</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.12em;color:#DFFF00">RESCUED · VALIDATED</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <sc-for list="{{ planB }}" as="b" hint-placeholder-count="5">
+            <div style="padding:15px 16px;border-radius:18px;background:#101B20;border:1px solid {{ b.border }}">
+              <div style="display:flex;align-items:center;gap:14px">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:{{ b.timeColor }};white-space:nowrap">{{ b.time }}</span>
+                <span style="flex:1;min-width:0;font-size:14.5px;font-weight:600">{{ b.name }}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;padding:5px 10px;border-radius:100px;background:{{ b.tagBg }};color:{{ b.tagColor }};white-space:nowrap">{{ b.tag }}</span>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:12px">
+                <sc-for list="{{ b.fits }}" as="f" hint-placeholder-count="4">
+                  <span style="display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:100px;background:{{ f.bg }};font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.06em;color:{{ f.color }}">{{ f.label }}</span>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:24px;border-radius:26px;background:#101B20;border:1px solid rgba(155,168,176,.11);margin-bottom:16px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#9BA8B0;margin-bottom:18px">RESCUE SUMMARY</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(160px,100%),1fr));gap:12px">
+        <sc-for list="{{ summary }}" as="s" hint-placeholder-count="6">
+          <div style="padding:18px;border-radius:18px;background:#0B1418;border:1px solid {{ s.border }}">
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;letter-spacing:-.02em;color:{{ s.color }};margin-bottom:6px">{{ s.value }}</div>
+            <div style="font-size:12px;color:#9BA8B0;line-height:1.4">{{ s.label }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:16px;align-items:center;padding:22px 24px;border-radius:24px;background:linear-gradient(160deg,rgba(0,214,201,.1),rgba(11,20,24,.92));border:1px solid rgba(0,214,201,.28);margin-bottom:24px;flex-wrap:wrap">
+      <div style="position:relative;width:60px;height:70px;flex:none;animation:floaty 5s ease-in-out infinite">
+        <div style="position:absolute;left:50%;top:3px;transform:translateX(-50%);width:2px;height:12px;background:#B9E900"></div>
+        <div style="position:absolute;left:50%;top:-3px;transform:translateX(-50%);width:9px;height:9px;border-radius:50%;background:#DFFF00;box-shadow:0 0 13px 3px rgba(223,255,0,.5)"></div>
+        <div style="position:absolute;left:0;top:13px;width:60px;height:52px;border-radius:21px;background:linear-gradient(165deg,#1B2E36,#0B1418);border:1px solid rgba(103,232,249,.24)"></div>
+        <div style="position:absolute;left:7px;top:23px;width:46px;height:31px;border-radius:16px;background:#050A0D;display:flex;align-items:center;justify-content:center;gap:10px">
+          <span style="width:9px;height:9px;border-radius:50%;background:#67E8F9;box-shadow:0 0 10px 2px rgba(103,232,249,.75)"></span>
+          <span style="width:9px;height:9px;border-radius:50%;background:#67E8F9;box-shadow:0 0 10px 2px rgba(103,232,249,.75)"></span>
+        </div>
+      </div>
+      <div style="flex:1;min-width:250px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.12em;color:#67E8F9;margin-bottom:9px">WHY THIS PLAN PASSED VALIDATION</div>
+        <div style="font-size:14.5px;line-height:1.6;color:#F8FAFC">I proposed four options. Three failed a check — one broke David's walking limit, two pushed Chris over budget. This is the one that cleared every rule.</div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:14px">
+      <button onClick="{{ accept }}" style="padding:20px 36px;border:none;border-radius:100px;background:#DFFF00;color:#050A0D;font-size:13px;font-weight:800;letter-spacing:.11em;cursor:pointer;box-shadow:0 20px 52px -14px rgba(223,255,0,.55)" style-hover="background:#B9E900">{{ acceptLabel }}</button>
+      <button onClick="{{ compareMap }}" style="display:flex;align-items:center;gap:10px;padding:20px 30px;border-radius:100px;border:1px solid rgba(103,232,249,.35);background:rgba(103,232,249,.06);color:#67E8F9;font-size:13px;font-weight:700;letter-spacing:.11em;cursor:pointer" style-hover="border-color:rgba(103,232,249,.7)">COMPARE ON MAP</button>
+      <button onClick="{{ tryAnother }}" style="padding:20px 28px;border:none;border-radius:100px;background:none;color:#9BA8B0;font-size:13px;font-weight:700;letter-spacing:.11em;cursor:pointer" style-hover="color:#F8FAFC">TRY ANOTHER PLAN</button>
+    </div>
+  </div>
+</section>
+</sc-if>
+
+<sc-if value="{{ onBreak }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="Break my plan" style="position:relative;padding:clamp(36px,5vw,64px) clamp(20px,4vw,36px) 90px;animation:risein .4s ease both">
+  <div style="position:absolute;top:-140px;left:50%;transform:translateX(-50%);width:900px;height:440px;pointer-events:none;background:radial-gradient(ellipse at center,rgba(223,255,0,.12),rgba(223,255,0,0) 70%);filter:blur(24px)"></div>
+  <div style="position:relative;max-width:1100px;margin:0 auto">
+    <div style="text-align:center;max-width:640px;margin:0 auto clamp(30px,4vw,46px)">
+      <div style="display:inline-flex;align-items:center;gap:10px;padding:7px 14px;border-radius:100px;border:1px solid rgba(223,255,0,.35);background:rgba(223,255,0,.08);font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:#DFFF00;margin-bottom:24px">LIVE DEMO CHALLENGE</div>
+      <h1 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(36px,5.6vw,60px);line-height:1.02;letter-spacing:-.035em;font-weight:700;margin:0 0 16px">Break my plan</h1>
+      <p style="font-size:17px;line-height:1.6;color:#9BA8B0;margin:0">Think our itinerary is smart? Try breaking it.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:14px;margin-bottom:20px">
+      <sc-for list="{{ breakers }}" as="b" hint-placeholder-count="5">
+        <button onClick="{{ b.fire }}" style="position:relative;overflow:hidden;cursor:pointer;padding:26px 20px;border-radius:24px;background:{{ b.bg }};border:1px solid {{ b.border }};color:#F8FAFC;text-align:left" style-hover="border-color:rgba(223,255,0,.5)">
+          <div style="width:46px;height:46px;border-radius:15px;background:{{ b.iconBg }};display:flex;align-items:center;justify-content:center;font-size:19px;color:{{ b.iconFg }};margin-bottom:20px">{{ b.glyph }}</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;letter-spacing:.01em;line-height:1.2;margin-bottom:8px">{{ b.name }}</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.1em;color:{{ b.stateColor }}">{{ b.state }}</div>
+          <sc-if value="{{ b.active }}" hint-placeholder-val="{{ false }}">
+            <span style="position:absolute;top:0;left:0;width:60%;height:100%;background:linear-gradient(90deg,rgba(223,255,0,0),rgba(223,255,0,.16),rgba(223,255,0,0));animation:sheen 1.1s ease-in-out infinite"></span>
+          </sc-if>
+        </button>
+      </sc-for>
+    </div>
+
+    <div style="padding:clamp(24px,3.4vw,36px);border-radius:28px;background:linear-gradient(165deg,#142329,#0B1418);border:1px solid {{ breakBorder }};animation:{{ breakAnim }}">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:18px;margin-bottom:24px">
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:{{ breakTagColor }};margin-bottom:12px">{{ breakTag }}</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:clamp(22px,3.2vw,30px);line-height:1.2;font-weight:600">{{ breakHeadline }}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="position:relative;width:76px;height:76px;flex:none">
+            <svg viewBox="0 0 76 76" style="width:76px;height:76px;transform:rotate(-90deg)">
+              <circle cx="38" cy="38" r="32" fill="none" stroke="rgba(155,168,176,.15)" stroke-width="7"/>
+              <circle cx="38" cy="38" r="32" fill="none" stroke="{{ breakScoreColor }}" stroke-width="7" stroke-linecap="round" stroke-dasharray="{{ breakDash }}" style="transition:stroke-dasharray .6s ease"/>
+            </svg>
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700">{{ breakScore }}</div>
+          </div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.12em;color:#9BA8B0;line-height:1.7">TRIP<br>HEALTH<br>AFTER</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr));gap:12px;margin-bottom:22px">
+        <sc-for list="{{ breakStats }}" as="s" hint-placeholder-count="4">
+          <div style="padding:18px;border-radius:18px;background:#0B1418;border:1px solid rgba(155,168,176,.1)">
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:{{ s.color }};margin-bottom:6px">{{ s.value }}</div>
+            <div style="font-size:11.5px;color:#9BA8B0">{{ s.label }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+        <sc-for list="{{ breakFits }}" as="f" hint-placeholder-count="4">
+          <span style="padding:9px 15px;border-radius:100px;background:{{ f.bg }};border:1px solid {{ f.border }};font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:{{ f.color }}">{{ f.label }}</span>
+        </sc-for>
+        <span style="margin-left:auto;font-size:13px;color:#9BA8B0">{{ breakFoot }}</span>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:24px;justify-content:center">
+      <button onClick="{{ resetBreak }}" style="padding:18px 30px;border-radius:100px;border:1px solid rgba(248,250,252,.2);background:rgba(248,250,252,.04);color:#F8FAFC;font-size:12.5px;font-weight:700;letter-spacing:.11em;cursor:pointer" style-hover="border-color:rgba(248,250,252,.45)">RESET THE PLAN</button>
+      <button onClick="{{ goChanged }}" style="padding:18px 32px;border:none;border-radius:100px;background:#DFFF00;color:#050A0D;font-size:12.5px;font-weight:800;letter-spacing:.11em;cursor:pointer;box-shadow:0 18px 46px -14px rgba(223,255,0,.55)" style-hover="background:#B9E900">OPEN FULL COMPARISON</button>
+    </div>
+  </div>
+</section>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:950}}">
+const PRESETS = [
+  { id: "rain", glyph: "☂", name: "Heavy Rain", hint: "Open-air stops at risk from 15:00", tag: "HEAVY RAIN" },
+  { id: "flight", glyph: "✈", name: "Flight Delayed", hint: "Arrival pushed back, day starts late", tag: "FLIGHT DELAYED" },
+  { id: "restaurant", glyph: "◗", name: "Restaurant Unavailable", hint: "Booking dropped or fully seated", tag: "RESTAURANT UNAVAILABLE" },
+  { id: "friend", glyph: "◍", name: "Friend Leaving Early", hint: "Group shrinks mid-day", tag: "FRIEND LEAVING EARLY" },
+  { id: "budget", glyph: "◫", name: "Budget Reduced", hint: "Less to spend than planned", tag: "BUDGET REDUCED" },
+  { id: "cancelled", glyph: "✕", name: "Activity Cancelled", hint: "A stop is closed or sold out", tag: "ACTIVITY CANCELLED" }
+];
+
+const STEPS = [
+  ["ANALYZING DISRUPTION", "Reading the rain radar against your 15:00 stop"],
+  ["PROTECTING CONFIRMED ACTIVITIES", "Hotel, river cruise and dinner booking held"],
+  ["CHECKING BUDGET", "RM480 remaining · Chris's ceiling respected"],
+  ["FINDING ALTERNATIVES", "9 indoor candidates within 900 m"],
+  ["REBALANCING THE GROUP", "Chris weighted up after 66% representation"],
+  ["PLAN B READY", "Validated against all four travellers"]
+];
+
+const BREAKERS = [
+  { id: "rain", glyph: "☂", name: "HEAVY RAIN", tag: "HEAVY RAIN",
+    headline: "Two open-air stops swapped indoors. Nothing else moved.",
+    score: 89, stats: [["3", "activities preserved", "#6EE7A8"], ["2", "replaced", "#FFB84D"], ["RM12", "saved", "#DFFF00"], ["32 min", "saved", "#DFFF00"]],
+    foot: "Rebuilt in 1.8 s" },
+  { id: "delay", glyph: "◷", name: "2 HOUR DELAY", tag: "2 HOUR DELAY",
+    headline: "Day 2 compressed to four stops. Dinner kept at 19:00.",
+    score: 84, stats: [["3", "activities preserved", "#6EE7A8"], ["1", "dropped", "#FFB84D"], ["RM30", "refunded", "#DFFF00"], ["2 h", "recovered", "#DFFF00"]],
+    foot: "Rebuilt in 2.1 s" },
+  { id: "closed", glyph: "◗", name: "RESTAURANT CLOSED", tag: "RESTAURANT CLOSED",
+    headline: "Riverside dinner moved to a Nyonya kitchen 300 m away.",
+    score: 90, stats: [["4", "activities preserved", "#6EE7A8"], ["1", "replaced", "#FFB84D"], ["RM8", "saved", "#DFFF00"], ["6 min", "saved", "#DFFF00"]],
+    foot: "Rebuilt in 1.4 s" },
+  { id: "friend", glyph: "◍", name: "FRIEND LEAVES", tag: "FRIEND LEAVES",
+    headline: "David heads home at 16:00. Walking cap lifts for the rest.",
+    score: 87, stats: [["4", "activities preserved", "#6EE7A8"], ["1", "upgraded", "#FFB84D"], ["RM45", "freed", "#DFFF00"], ["1.4 km", "added by choice", "#DFFF00"]],
+    foot: "Rebuilt in 1.6 s" },
+  { id: "cut", glyph: "◫", name: "RM150 BUDGET CUT", tag: "RM150 BUDGET CUT",
+    headline: "Paid stops traded for street food and free heritage sites.",
+    score: 82, stats: [["3", "activities preserved", "#6EE7A8"], ["2", "replaced", "#FFB84D"], ["RM152", "cut", "#DFFF00"], ["0", "stops lost", "#6EE7A8"]],
+    foot: "Rebuilt in 2.4 s" }
+];
+
+const FITS = ["GROUP FIT", "BUDGET FIT", "WALKING FIT", "WEATHER FIT"];
+const RESCUE_HASH = window.location.hash.replace(/^#/, "");
+const RESCUE_SCREEN = RESCUE_HASH === "processing" ? "processing" : RESCUE_HASH === "compare" || RESCUE_HASH === "plan-b" ? "changed" : RESCUE_HASH === "break" ? "break" : "trigger";
+
+class Component extends DCLogic {
+  state = {
+    screen: RESCUE_SCREEN, preset: "rain", note: "",
+    stepIndex: 0, accepted: false, planVariant: 0,
+    broken: "rain", firing: null
+  };
+
+  timers = [];
+
+  clearTimers() { this.timers.forEach(clearTimeout); this.timers = []; }
+  componentWillUnmount() { this.clearTimers(); }
+
+  acceptPlan = () => {
+    this.setState({ accepted: true });
+    if (window.EscapeSyncApp) {
+      EscapeSyncApp.saveState({ disruption: this.state.preset, rescueAccepted: true, healthScore: 96 });
+      EscapeSyncApp.toast("Plan B accepted — returning to Command Center");
+      setTimeout(() => EscapeSyncApp.navigate("command", "updated"), 650);
+    }
+  };
+
+  go = (screen) => { this.setState({ screen }); window.scrollTo(0, 0); };
+
+  startRescue = () => {
+    this.clearTimers();
+    this.setState({ screen: "processing", stepIndex: 0 });
+    window.scrollTo(0, 0);
+    for (let i = 1; i <= STEPS.length; i++) {
+      this.timers.push(setTimeout(() => this.setState({ stepIndex: i }), i * 900));
+    }
+  };
+
+  fire = (id) => () => {
+    this.setState({ firing: id });
+    this.timers.push(setTimeout(() => this.setState({ broken: id, firing: null }), 1100));
+  };
+
+  renderVals() {
+    const s = this.state;
+    const tabs = [["TRIGGER", "trigger"], ["PROCESSING", "processing"], ["WHAT CHANGED", "changed"], ["BREAK MY PLAN", "break"]];
+    const navTabs = tabs.map(([name, key]) => ({
+      name, select: key === "processing" ? this.startRescue : () => this.go(key),
+      bg: s.screen === key ? "#DFFF00" : "transparent",
+      fg: s.screen === key ? "#050A0D" : "#9BA8B0"
+    }));
+
+    const presets = PRESETS.map(p => {
+      const on = s.preset === p.id;
+      return { ...p, select: () => this.setState({ preset: p.id }),
+        bg: on ? "linear-gradient(160deg,#142329,#101B20)" : "#101B20",
+        border: on ? "rgba(223,255,0,.45)" : "rgba(155,168,176,.11)",
+        iconBg: on ? "rgba(223,255,0,.14)" : "rgba(103,232,249,.1)",
+        iconFg: on ? "#DFFF00" : "#67E8F9",
+        checkBg: on ? "#DFFF00" : "transparent",
+        checkBorder: on ? "#DFFF00" : "rgba(155,168,176,.28)",
+        check: on ? "✓" : "" };
+    });
+
+    const active = PRESETS.find(p => p.id === s.preset) || PRESETS[0];
+
+    const C = 2 * Math.PI * 44;
+    const done = s.stepIndex >= STEPS.length;
+    const steps = STEPS.map(([label, detail], i) => {
+      const complete = i < s.stepIndex;
+      const running = i === s.stepIndex;
+      return { label, detail,
+        icon: complete ? "✓" : String(i + 1),
+        spinning: running,
+        iconBg: complete ? "rgba(110,231,168,.16)" : running ? "rgba(223,255,0,.16)" : "rgba(155,168,176,.1)",
+        iconFg: complete ? "#6EE7A8" : running ? "#DFFF00" : "#5C6B73",
+        rowBg: running ? "#142329" : "transparent",
+        rowBorder: running ? "rgba(223,255,0,.3)" : "transparent",
+        titleColor: complete || running ? "#F8FAFC" : "#5C6B73",
+        state: complete ? "DONE" : running ? "WORKING" : "QUEUED",
+        stateColor: complete ? "#6EE7A8" : running ? "#DFFF00" : "#5C6B73" };
+    });
+
+    const fitBadge = (label, ok) => ({
+      label, bg: ok ? "rgba(110,231,168,.1)" : "rgba(255,184,77,.1)",
+      border: ok ? "rgba(110,231,168,.3)" : "rgba(255,184,77,.32)",
+      color: ok ? "#6EE7A8" : "#FFB84D"
+    });
+    const procBadges = FITS.map((f, i) => fitBadge(f + (done ? " ✓" : " …"), done || i < s.stepIndex - 1));
+
+    const planA = [
+      { time: "12:30", name: "Melaka River Cruise", tag: "CONFIRMED", kept: true },
+      { time: "14:00", name: "Outdoor Market", tag: "AT RISK", kept: false },
+      { time: "15:30", name: "Viewpoint Walk", tag: "AT RISK", kept: false },
+      { time: "17:00", name: "Café Break", tag: "CONFIRMED", kept: true },
+      { time: "19:00", name: "Riverside Dinner", tag: "BOOKED", kept: true }
+    ].map(a => ({ ...a,
+      border: a.kept ? "rgba(110,231,168,.24)" : "rgba(255,184,77,.28)",
+      timeColor: a.kept ? "#67E8F9" : "#FFB84D",
+      opacity: a.kept ? "1" : ".62",
+      strike: a.kept ? "none" : "line-through",
+      tagBg: a.kept ? "rgba(110,231,168,.12)" : "rgba(255,184,77,.14)",
+      tagColor: a.kept ? "#6EE7A8" : "#FFB84D" }));
+
+    const variants = [
+      [
+        { time: "14:00", name: "Indoor Food Hall", tag: "REPLACED", kept: false, fits: [true, true, true, true] },
+        { time: "15:45", name: "Heritage Gallery", tag: "REPLACED", kept: false, fits: [true, true, true, true] }
+      ],
+      [
+        { time: "14:00", name: "Nyonya Cooking Class", tag: "REPLACED", kept: false, fits: [true, false, true, true] },
+        { time: "15:45", name: "Maritime Museum", tag: "REPLACED", kept: false, fits: [true, true, true, true] }
+      ]
+    ];
+    const swapped = variants[s.planVariant % variants.length];
+
+    const planB = [
+      { time: "12:30", name: "Melaka River Cruise", tag: "PRESERVED", kept: true, fits: [true, true, true, true] },
+      swapped[0], swapped[1],
+      { time: "17:15", name: "Café Break", tag: "PRESERVED", kept: true, fits: [true, true, true, true] },
+      { time: "19:00", name: "Riverside Dinner", tag: "PRESERVED", kept: true, fits: [true, true, true, true] }
+    ].map(b => ({ ...b,
+      border: b.kept ? "rgba(110,231,168,.3)" : "rgba(255,184,77,.32)",
+      timeColor: b.kept ? "#6EE7A8" : "#FFB84D",
+      tagBg: b.kept ? "rgba(110,231,168,.12)" : "rgba(255,184,77,.14)",
+      tagColor: b.kept ? "#6EE7A8" : "#FFB84D",
+      fits: FITS.map((label, i) => {
+        const ok = b.fits[i];
+        return { label: label + (ok ? " ✓" : " !"),
+          bg: ok ? "rgba(110,231,168,.1)" : "rgba(255,184,77,.12)",
+          color: ok ? "#6EE7A8" : "#FFB84D" };
+      }) }));
+
+    const summary = [
+      ["3", "activities preserved", "#6EE7A8", "rgba(110,231,168,.26)"],
+      ["2", "replaced", "#FFB84D", "rgba(255,184,77,.26)"],
+      ["RM6", "saved", "#DFFF00", "rgba(223,255,0,.22)"],
+      ["18 min", "saved", "#DFFF00", "rgba(223,255,0,.22)"],
+      ["1.2 km", "less walking", "#67E8F9", "rgba(103,232,249,.24)"],
+      ["+14%", "group satisfaction", "#6EE7A8", "rgba(110,231,168,.26)"]
+    ].map(([value, label, color, border]) => ({ value, label, color, border }));
+
+    const breakers = BREAKERS.map(b => {
+      const on = s.broken === b.id;
+      const firing = s.firing === b.id;
+      return { id: b.id, glyph: b.glyph, name: b.name, fire: this.fire(b.id), active: firing,
+        bg: on ? "linear-gradient(160deg,#142329,#101B20)" : "#101B20",
+        border: on ? "rgba(223,255,0,.45)" : "rgba(155,168,176,.11)",
+        iconBg: on ? "rgba(223,255,0,.14)" : "rgba(255,107,95,.1)",
+        iconFg: on ? "#DFFF00" : "#FF6B5F",
+        state: firing ? "REBUILDING…" : on ? "SURVIVED" : "TAP TO BREAK",
+        stateColor: firing ? "#FFB84D" : on ? "#6EE7A8" : "#9BA8B0" };
+    });
+
+    const bk = BREAKERS.find(b => b.id === s.broken) || BREAKERS[0];
+    const busy = !!s.firing;
+    const BC = 2 * Math.PI * 32;
+
+    return {
+      navTabs, presets,
+      onTrigger: s.screen === "trigger", onProcessing: s.screen === "processing",
+      onChanged: s.screen === "changed", onBreak: s.screen === "break",
+      note: s.note, setNote: (e) => this.setState({ note: e.target.value }),
+      protectChips: ["River cruise stays", "Dinner booking stays", "David's walking cap stays"],
+      triggerSummary: "Selected: " + active.name + " · 3 confirmed activities will be protected",
+      startRescue: this.startRescue,
+      reasonTag: active.tag,
+      procHeadline: done ? "Plan B is ready." : "Rebuilding only what broke.",
+      procDash: (C * Math.min(s.stepIndex, STEPS.length) / STEPS.length).toFixed(1) + " " + C.toFixed(1),
+      procPct: Math.round(Math.min(s.stepIndex, STEPS.length) / STEPS.length * 100) + "%",
+      steps, procBadges, procDone: done,
+      goChanged: () => this.go("changed"),
+      planA, planB, summary,
+      accept: this.acceptPlan,
+      compareMap: () => window.EscapeSyncApp ? EscapeSyncApp.navigate("map", "compare") : (window.location.href = "EscapeSync Phase 4.dc.html#compare"),
+      acceptLabel: s.accepted ? "PLAN B ACCEPTED ✓" : "ACCEPT PLAN B",
+      tryAnother: () => this.setState({ planVariant: s.planVariant + 1, accepted: false }),
+      breakers,
+      breakTag: busy ? "REBUILDING THE ROUTE…" : "RESULT · " + bk.tag,
+      breakTagColor: busy ? "#FFB84D" : "#DFFF00",
+      breakHeadline: busy ? "Holding what's confirmed, testing alternatives…" : bk.headline,
+      breakBorder: busy ? "rgba(255,184,77,.4)" : "rgba(223,255,0,.26)",
+      breakAnim: busy ? "shake .5s ease-in-out" : "none",
+      breakScore: busy ? "…" : bk.score,
+      breakScoreColor: busy ? "#FFB84D" : "#DFFF00",
+      breakDash: (BC * (busy ? 0.2 : bk.score / 100)).toFixed(1) + " " + BC.toFixed(1),
+      breakStats: bk.stats.map(([value, label, color]) => ({ value: busy ? "—" : value, label, color })),
+      breakFits: FITS.map(f => fitBadge(f + (busy ? " …" : " ✓"), !busy)),
+      breakFoot: busy ? "Validating against 4 travellers" : bk.foot,
+      resetBreak: () => this.setState({ broken: "rain", firing: null })
+    };
+  }
+}
+</script>
+</body>
+</html>

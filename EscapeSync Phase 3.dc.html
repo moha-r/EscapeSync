@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<script src="./app.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #050A0D; color: #F8FAFC; font-family: Manrope, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #DFFF00; text-decoration: none; }
+  a:hover { color: #B9E900; }
+  button { font-family: inherit; }
+  @keyframes dashflow { to { stroke-dashoffset: -1200; } }
+  @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  @keyframes pulseglow { 0%,100% { opacity: .5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.14); } }
+  @keyframes blip { 0%,100% { opacity: 1; } 50% { opacity: .25; } }
+  @keyframes risein { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes glowpulse { 0%,100% { box-shadow: 0 18px 50px -12px rgba(223,255,0,.55); } 50% { box-shadow: 0 18px 70px -8px rgba(223,255,0,.85); } }
+</style>
+</helmet>
+
+<div style="display:flex;align-items:stretch;min-height:100vh;max-width:100%">
+
+<aside style="position:sticky;top:0;align-self:flex-start;height:100vh;width:250px;flex:none;display:flex;flex-direction:column;gap:26px;padding:24px 18px;background:#0B1418;border-right:1px solid rgba(155,168,176,.1)">
+  <a href="EscapeSync Phase 1.dc.html" style="display:flex;align-items:center;gap:11px;padding:6px 8px;text-decoration:none;color:inherit">
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="13" stroke="#67E8F9" stroke-opacity=".35" stroke-width="1.5"/>
+      <path d="M5 21c6 0 6-10 11-10s5 10 11 10" stroke="#00D6C9" stroke-width="2.4" stroke-linecap="round"/>
+      <circle cx="16" cy="11" r="4" fill="#DFFF00"/>
+    </svg>
+    <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px;letter-spacing:-.3px">Escape<span style="color:#DFFF00">Sync</span></span>
+  </a>
+
+  <div style="display:flex;flex-direction:column;gap:3px">
+    <sc-for list="{{ nav }}" as="n" hint-placeholder-count="10">
+      <button onClick="{{ n.select }}" style="display:flex;align-items:center;gap:12px;text-align:left;cursor:pointer;padding:11px 12px;border:none;border-radius:13px;background:{{ n.bg }};color:{{ n.fg }};font-size:13.5px;font-weight:{{ n.weight }}" style-hover="background:#142329">
+        <span style="width:5px;height:5px;border-radius:50%;flex:none;background:{{ n.dot }}"></span>
+        <span style="flex:1;min-width:0">{{ n.name }}</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;color:{{ n.tagColor }}">{{ n.tag }}</span>
+      </button>
+    </sc-for>
+  </div>
+
+  <div style="margin-top:auto;padding:16px;border-radius:18px;background:#101B20;border:1px solid rgba(0,214,201,.2)">
+    <div style="display:flex;align-items:center;gap:11px">
+      <div style="position:relative;width:36px;height:40px;flex:none">
+        <div style="position:absolute;left:50%;top:2px;transform:translateX(-50%);width:1.5px;height:7px;background:#B9E900"></div>
+        <div style="position:absolute;left:50%;top:-2px;transform:translateX(-50%);width:6px;height:6px;border-radius:50%;background:#DFFF00;animation:pulseglow 2.4s ease-in-out infinite"></div>
+        <div style="position:absolute;left:0;top:8px;width:36px;height:30px;border-radius:12px;background:linear-gradient(165deg,#1B2E36,#0B1418);border:1px solid rgba(103,232,249,.24)"></div>
+        <div style="position:absolute;left:5px;top:15px;width:26px;height:16px;border-radius:8px;background:#050A0D;display:flex;align-items:center;justify-content:center;gap:5px">
+          <span style="width:5px;height:5px;border-radius:50%;background:#67E8F9;box-shadow:0 0 7px 1px rgba(103,232,249,.8)"></span>
+          <span style="width:5px;height:5px;border-radius:50%;background:#67E8F9;box-shadow:0 0 7px 1px rgba(103,232,249,.8)"></span>
+        </div>
+      </div>
+      <div style="min-width:0">
+        <div style="font-size:13px;font-weight:600">Pip is watching</div>
+        <div style="font-size:11px;color:#9BA8B0">3 signals on Day 1</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<main style="flex:1;min-width:0;position:relative">
+
+<sc-if value="{{ onCommand }}" hint-placeholder-val="{{ true }}">
+<section data-screen-label="Command center" style="padding:clamp(24px,3vw,36px) clamp(20px,3vw,36px) 130px;animation:risein .4s ease both">
+  <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:22px;margin-bottom:26px">
+    <div>
+      <div style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#00D6C9;margin-bottom:12px">
+        <span style="width:6px;height:6px;border-radius:50%;background:#00D6C9;animation:blip 1.8s ease-in-out infinite"></span>TRIP LIVE · DAY 1 OF 3
+      </div>
+      <h1 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(30px,3.6vw,44px);line-height:1.05;letter-spacing:-.03em;font-weight:700;margin:0 0 10px">Kuala Lumpur → Melaka</h1>
+      <div style="font-size:15px;color:#9BA8B0">3 Days · 4 Travellers · RM600 per person</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px">
+      <div style="display:flex">
+        <sc-for list="{{ avatars }}" as="a" hint-placeholder-count="4">
+          <div style="width:42px;height:42px;border-radius:50%;overflow:hidden;border:2px solid #050A0D;margin-right:-11px">
+            <image-slot id="{{ a.slotId }}" shape="circle" placeholder="{{ a.name }}"></image-slot>
+          </div>
+        </sc-for>
+      </div>
+      <div style="padding:11px 18px;border-radius:100px;background:#101B20;border:1px solid rgba(155,168,176,.14);font-size:13px;color:#9BA8B0;margin-left:14px">Crew synced <span style="color:#6EE7A8;font-weight:600">4/4</span></div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:14px;margin-bottom:16px">
+    <button onClick="{{ openHealth }}" style="text-align:left;cursor:pointer;display:flex;align-items:center;gap:18px;padding:22px;border-radius:22px;background:linear-gradient(160deg,#142329,#101B20);border:1px solid rgba(223,255,0,.25);color:#F8FAFC" style-hover="border-color:rgba(223,255,0,.6)">
+      <div style="position:relative;width:74px;height:74px;flex:none">
+        <svg viewBox="0 0 74 74" style="width:74px;height:74px;transform:rotate(-90deg)">
+          <circle cx="37" cy="37" r="31" fill="none" stroke="rgba(155,168,176,.16)" stroke-width="7"/>
+          <circle cx="37" cy="37" r="31" fill="none" stroke="#DFFF00" stroke-width="7" stroke-linecap="round" stroke-dasharray="169 195" style="filter:drop-shadow(0 0 8px rgba(223,255,0,.55))"/>
+        </svg>
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:700">87</div>
+      </div>
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.14em;color:#9BA8B0;margin-bottom:7px">TRIP HEALTH SCORE</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:600">87/100 <span style="color:#DFFF00">GOOD</span></div>
+        <div style="font-size:11.5px;color:#9BA8B0;margin-top:5px">Tap for breakdown</div>
+      </div>
+    </button>
+
+    <div style="padding:22px;border-radius:22px;background:#101B20;border:1px solid rgba(155,168,176,.11)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.14em;color:#9BA8B0">BUDGET REMAINING</div>
+        <span style="width:34px;height:34px;border-radius:12px;background:rgba(110,231,168,.12);display:flex;align-items:center;justify-content:center;color:#6EE7A8;font-size:15px">◫</span>
+      </div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:700;letter-spacing:-.02em;margin-bottom:12px">RM480</div>
+      <div style="height:6px;border-radius:100px;background:rgba(155,168,176,.14);overflow:hidden;margin-bottom:9px">
+        <div style="width:80%;height:100%;border-radius:100px;background:linear-gradient(90deg,#00D6C9,#6EE7A8)"></div>
+      </div>
+      <div style="font-size:11.5px;color:#9BA8B0">RM120 spent of RM600 per person</div>
+    </div>
+
+    <div style="padding:22px;border-radius:22px;background:#101B20;border:1px solid rgba(255,184,77,.22)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.14em;color:#9BA8B0">WEATHER · MELAKA</div>
+        <span style="width:34px;height:34px;border-radius:12px;background:rgba(255,184,77,.14);display:flex;align-items:center;justify-content:center;color:#FFB84D;font-size:16px">☂</span>
+      </div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:700;letter-spacing:-.02em;margin-bottom:12px">28°C</div>
+      <div style="font-size:13px;color:#FFB84D;font-weight:600;margin-bottom:5px">Rain later</div>
+      <div style="font-size:11.5px;color:#9BA8B0">Heaviest around 16:00</div>
+    </div>
+
+    <div style="padding:22px;border-radius:22px;background:#101B20;border:1px solid rgba(155,168,176,.11)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.14em;color:#9BA8B0">GROUP HAPPINESS</div>
+        <span style="width:34px;height:34px;border-radius:12px;background:rgba(103,232,249,.12);display:flex;align-items:center;justify-content:center;color:#67E8F9;font-size:15px">♥</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:12px">
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:700;letter-spacing:-.02em">4.6</span>
+        <span style="font-size:15px;color:#9BA8B0">/ 5</span>
+      </div>
+      <div style="display:flex;gap:4px;margin-bottom:9px">
+        <span style="color:#DFFF00;font-size:14px">★★★★</span><span style="color:rgba(155,168,176,.4);font-size:14px">★</span>
+      </div>
+      <div style="font-size:11.5px;color:#9BA8B0">Highest: Alice · Lowest: Chris</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:16px;align-items:start">
+    <div style="padding:24px;border-radius:24px;background:#101B20;border:1px solid rgba(155,168,176,.11)">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#9BA8B0">TODAY · DAY 1</div>
+        <button onClick="{{ goItinerary }}" style="border:none;background:none;color:#DFFF00;font-size:11px;font-weight:700;letter-spacing:.08em;cursor:pointer">FULL ITINERARY →</button>
+      </div>
+      <div style="position:relative;padding-left:26px">
+        <div style="position:absolute;left:5px;top:6px;bottom:14px;width:2px;background:linear-gradient(180deg,#DFFF00,#00D6C9 55%,rgba(0,214,201,.12));box-shadow:0 0 12px rgba(0,214,201,.6)"></div>
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <sc-for list="{{ condensed }}" as="c" hint-placeholder-count="5">
+            <div style="position:relative">
+              <div style="position:absolute;left:-26px;top:5px;width:12px;height:12px;border-radius:50%;background:{{ c.dot }};box-shadow:0 0 0 4px rgba(5,10,13,1),0 0 12px {{ c.glow }}"></div>
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:{{ c.timeColor }}">{{ c.time }}</span>
+                <span style="font-size:11px;color:#9BA8B0">{{ c.meta }}</span>
+              </div>
+              <div style="font-size:14.5px;font-weight:600;margin-top:4px">{{ c.name }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="margin-top:24px;padding:16px;border-radius:16px;background:rgba(255,184,77,.08);border:1px solid rgba(255,184,77,.26)">
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px">Rain expected in 35 min</div>
+        <div style="font-size:12px;color:#9BA8B0">A Famosa is open-air — Pip has an indoor swap ready.</div>
+      </div>
+    </div>
+
+    <div style="padding:24px;border-radius:24px;background:#101B20;border:1px solid rgba(155,168,176,.11)">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px">
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#9BA8B0;margin-bottom:6px">ROUTE OVERVIEW</div>
+          <div style="font-size:13px;color:#67E8F9">Day 1 · 5 stops · crew together</div>
+        </div>
+        <a href="EscapeSync Phase 4.dc.html" style="display:flex;align-items:center;gap:9px;padding:12px 20px;border-radius:100px;background:#DFFF00;color:#050A0D;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.12em;font-weight:700;text-decoration:none;white-space:nowrap" style-hover="background:#B9E900">OPEN MAP EXPLORER<span style="font-size:12px">➤</span></a>
+      </div>
+      <div style="position:relative;height:clamp(260px,32vh,340px);border-radius:20px;overflow:hidden;background:linear-gradient(180deg,#0A1C23,#050A0D 72%);border:1px solid rgba(103,232,249,.14)">
+        <div style="position:absolute;inset:0;perspective:1100px;perspective-origin:50% 34%">
+          <div style="position:absolute;left:-6%;top:6%;width:112%;height:102%;transform-style:preserve-3d;transform:{{ mapPlane }}">
+            <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 30% 10%,#183A42,#08141A 62%,#050A0D)"></div>
+            <svg viewBox="0 0 1000 700" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%">
+              <defs>
+                <linearGradient id="cmdRoute" x1="0" y1="1" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#00D6C9"/><stop offset="55%" stop-color="#67E8F9"/><stop offset="100%" stop-color="#DFFF00"/>
+                </linearGradient>
+              </defs>
+              <g stroke="rgba(103,232,249,.10)" stroke-width="1.4">
+                <path d="M0 620 L1000 520"/><path d="M0 500 L1000 400"/><path d="M0 380 L1000 280"/><path d="M0 260 L1000 160"/>
+                <path d="M180 700 L180 0"/><path d="M420 700 L420 0"/><path d="M660 700 L660 0"/><path d="M880 700 L880 0"/>
+              </g>
+              <path d="M-40 250 C 180 300 260 420 460 430 S 760 470 1040 420" stroke="rgba(0,214,201,.4)" stroke-width="44" fill="none" stroke-linecap="round"/>
+              <path d="M 200 518 C 268 518, 283 448, 350 448 C 418 448, 433 378, 500 378 C 568 378, 583 315, 650 315 C 713 315, 727 253, 790 253" stroke="url(#cmdRoute)" stroke-width="7" fill="none" stroke-linecap="round" style="filter:drop-shadow(0 0 12px rgba(0,214,201,.8))"/>
+              <path d="M 200 518 C 268 518, 283 448, 350 448 C 418 448, 433 378, 500 378 C 568 378, 583 315, 650 315 C 713 315, 727 253, 790 253" stroke="#F8FAFC" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="26 220" opacity=".9" style="animation:dashflow 6s linear infinite"/>
+            </svg>
+            <sc-for list="{{ mapBuildings }}" as="b" hint-placeholder-count="18">
+              <div style="position:absolute;left:{{ b.left }};top:{{ b.top }};width:{{ b.w }};height:{{ b.h }};transform-style:preserve-3d">
+                <div style="position:absolute;inset:0;background:rgba(0,0,0,.55);filter:blur(3px);border-radius:4px;transform:translate({{ b.shadowX }},{{ b.shadowY }})"></div>
+                <div style="position:absolute;left:0;bottom:0;width:100%;height:{{ b.z }};transform-origin:bottom center;transform:rotateX(-90deg);background:{{ b.front }};border-top:1px solid {{ b.edge }}"></div>
+                <div style="position:absolute;top:0;right:0;height:100%;width:{{ b.z }};transform-origin:right center;transform:rotateY(-90deg);background:{{ b.side }};border-top:1px solid rgba(103,232,249,.14)"></div>
+                <div style="position:absolute;inset:0;transform:translateZ({{ b.z }});background:{{ b.roof }};border:1px solid {{ b.edge }};border-radius:2px"></div>
+              </div>
+            </sc-for>
+            <sc-for list="{{ mapStops }}" as="st" hint-placeholder-count="5">
+              <div style="position:absolute;left:{{ st.left }};top:{{ st.top }};transform:translateZ({{ st.z }}) {{ mapCounter }};transform-origin:bottom center">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:5px;transform:translate(-50%,-100%)">
+                  <span style="display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:{{ st.bg }};color:#050A0D;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;border:2px solid rgba(5,10,13,.9);box-shadow:0 0 20px {{ st.glow }}">{{ st.n }}</span>
+                  <span style="white-space:nowrap;padding:3px 9px;border-radius:100px;background:rgba(5,10,13,.8);font-size:10px;font-weight:600;color:{{ st.labelColor }}">{{ st.name }}</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="position:absolute;left:18px;top:16px;display:flex;flex-direction:column;gap:8px">
+          <span style="padding:7px 12px;border-radius:10px;background:rgba(5,10,13,.72);backdrop-filter:blur(8px);font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0">KL SENTRAL</span>
+          <span style="padding:7px 12px;border-radius:10px;background:rgba(5,10,13,.72);backdrop-filter:blur(8px);font-family:'JetBrains Mono',monospace;font-size:10px;color:#DFFF00">JONKER STREET · NOW</span>
+          <button onClick="{{ goMapExplorer }}" style="padding:7px 12px;border-radius:10px;background:rgba(223,255,0,.14);border:1px solid rgba(223,255,0,.4);backdrop-filter:blur(8px);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#DFFF00;cursor:pointer;width:max-content">OPEN EXPLORER →</button>
+        </div>
+        <div style="position:absolute;right:18px;bottom:16px;display:flex;gap:8px">
+          <span style="padding:8px 12px;border-radius:10px;background:rgba(5,10,13,.72);backdrop-filter:blur(8px);font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0">5 STOPS</span>
+          <span style="padding:8px 12px;border-radius:10px;background:rgba(5,10,13,.72);backdrop-filter:blur(8px);font-family:'JetBrains Mono',monospace;font-size:10px;color:#67E8F9">148 KM</span>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(160px,100%),1fr));gap:12px;margin-top:16px">
+        <div style="padding:16px;border-radius:16px;background:#0B1418"><div style="font-size:11.5px;color:#9BA8B0;margin-bottom:6px">Next leg</div><div style="font-size:14px;font-weight:600">Jonker → A Famosa · 12 min walk</div></div>
+        <div style="padding:16px;border-radius:16px;background:#0B1418"><div style="font-size:11.5px;color:#9BA8B0;margin-bottom:6px">Walking today</div><div style="font-size:14px;font-weight:600">3.1 km <span style="color:#FFB84D">· near David's limit</span></div></div>
+        <div style="padding:16px;border-radius:16px;background:#0B1418"><div style="font-size:11.5px;color:#9BA8B0;margin-bottom:6px">Backups ready</div><div style="font-size:14px;font-weight:600;color:#6EE7A8">Plan B · Plan C</div></div>
+      </div>
+    </div>
+  </div>
+
+  <button onClick="{{ goRescue }}" style="position:fixed;right:clamp(20px,3vw,40px);bottom:clamp(20px,3vw,36px);z-index:40;display:flex;align-items:center;gap:14px;padding:20px 30px;border:none;border-radius:100px;background:#DFFF00;color:#050A0D;font-size:14px;font-weight:800;letter-spacing:.1em;cursor:pointer;animation:glowpulse 3s ease-in-out infinite" style-hover="background:#B9E900">
+    <span style="width:26px;height:26px;border-radius:50%;background:rgba(5,10,13,.14);display:flex;align-items:center;justify-content:center;font-size:14px">⚡</span>
+    RESCUE MY DAY
+  </button>
+</section>
+</sc-if>
+
+<sc-if value="{{ onItinerary }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="Itinerary" style="padding:clamp(24px,3vw,36px) clamp(20px,3vw,36px) 90px;animation:risein .4s ease both">
+  <div style="max-width:1000px">
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:24px">
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#00D6C9;margin-bottom:12px">KUALA LUMPUR → MELAKA</div>
+        <h1 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(30px,3.6vw,42px);line-height:1.05;letter-spacing:-.03em;font-weight:700;margin:0">Itinerary</h1>
+      </div>
+      <div style="font-size:13px;color:#9BA8B0">{{ dayMeta }}</div>
+    </div>
+
+    <div style="display:flex;gap:6px;padding:5px;border-radius:100px;background:#101B20;border:1px solid rgba(155,168,176,.12);width:max-content;max-width:100%;margin-bottom:28px">
+      <sc-for list="{{ dayTabs }}" as="d" hint-placeholder-count="3">
+        <button onClick="{{ d.select }}" style="padding:11px 24px;border:none;border-radius:100px;font-size:12px;font-weight:700;letter-spacing:.08em;cursor:pointer;background:{{ d.bg }};color:{{ d.fg }}">{{ d.label }}</button>
+      </sc-for>
+    </div>
+
+    <div style="position:relative;padding-left:34px">
+      <div style="position:absolute;left:7px;top:10px;bottom:60px;width:2px;background:linear-gradient(180deg,#DFFF00,#00D6C9 50%,rgba(0,214,201,.15));box-shadow:0 0 14px rgba(0,214,201,.65)"></div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <sc-for list="{{ items }}" as="it" hint-placeholder-count="5">
+          <div style="position:relative">
+            <div style="position:absolute;left:-34px;top:26px;width:14px;height:14px;border-radius:50%;background:{{ it.dot }};box-shadow:0 0 0 5px #050A0D,0 0 14px {{ it.glow }}"></div>
+            <div style="display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr);gap:20px;padding:18px;border-radius:22px;background:#101B20;border:1px solid {{ it.border }}" style-hover="border-color:rgba(0,214,201,.4);background:#142329">
+              <div style="height:112px;border-radius:16px;overflow:hidden">
+                <image-slot id="{{ it.slotId }}" shape="rounded" radius="16" src="https://commons.wikimedia.org/wiki/Special:FilePath/Dutch%20Square%20Malacca.JPG?width=600" credit="Wikimedia Commons" credit-href="https://commons.wikimedia.org/wiki/Category:Melaka" placeholder="{{ it.slotHint }}"></image-slot>
+              </div>
+              <div style="min-width:0">
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:8px">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:{{ it.timeColor }};letter-spacing:.06em">{{ it.time }}</span>
+                  <span style="padding:4px 10px;border-radius:100px;background:{{ it.fitBg }};font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.1em;color:{{ it.fitColor }}">FIT {{ it.fit }}</span>
+                  <span style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:{{ it.weatherColor }}">{{ it.weatherIcon }} {{ it.weather }}</span>
+                  <span style="margin-left:auto;display:flex;align-items:center;gap:10px;color:#5C6B73;font-size:14px">
+                    <span title="Drag to reorder" style="cursor:grab;letter-spacing:2px">⣿</span>
+                    <span title="Edit" style="cursor:pointer">✎</span>
+                    <span title="Remove" style="cursor:pointer">✕</span>
+                  </span>
+                </div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;margin-bottom:6px">{{ it.name }}</div>
+                <div style="font-size:13px;color:#9BA8B0;margin-bottom:14px">{{ it.location }}</div>
+                <div style="display:flex;flex-wrap:wrap;gap:10px">
+                  <span style="padding:8px 13px;border-radius:12px;background:#0B1418;font-size:12px;color:#F8FAFC">{{ it.cost }}</span>
+                  <span style="padding:8px 13px;border-radius:12px;background:#0B1418;font-size:12px;color:#9BA8B0">{{ it.travelIcon }} {{ it.travel }}</span>
+                  <span style="padding:8px 13px;border-radius:12px;background:#0B1418;font-size:12px;color:#9BA8B0">{{ it.mode }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <button onClick="{{ addActivity }}" style="margin-top:18px;width:100%;padding:20px;border-radius:20px;border:1px dashed rgba(223,255,0,.4);background:rgba(223,255,0,.05);color:#DFFF00;font-size:12px;font-weight:800;letter-spacing:.12em;cursor:pointer" style-hover="background:rgba(223,255,0,.1)">+ ADD ACTIVITY</button>
+    </div>
+  </div>
+</section>
+</sc-if>
+
+<sc-if value="{{ onSoon }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="Coming next" style="min-height:80vh;display:flex;align-items:center;justify-content:center;padding:60px 32px;animation:risein .4s ease both">
+  <div style="max-width:420px;text-align:center">
+    <div style="position:relative;width:92px;height:104px;margin:0 auto 28px;animation:floaty 5s ease-in-out infinite">
+      <div style="position:absolute;left:50%;top:4px;transform:translateX(-50%);width:2px;height:16px;background:#B9E900"></div>
+      <div style="position:absolute;left:50%;top:-4px;transform:translateX(-50%);width:12px;height:12px;border-radius:50%;background:#DFFF00;box-shadow:0 0 16px 4px rgba(223,255,0,.5)"></div>
+      <div style="position:absolute;left:0;top:18px;width:92px;height:78px;border-radius:30px;background:linear-gradient(165deg,#1B2E36,#0B1418);border:1px solid rgba(103,232,249,.24)"></div>
+      <div style="position:absolute;left:11px;top:32px;width:70px;height:46px;border-radius:23px;background:#050A0D;border:1px solid rgba(103,232,249,.18);display:flex;align-items:center;justify-content:center;gap:12px">
+        <span style="width:12px;height:12px;border-radius:50%;background:#67E8F9;box-shadow:0 0 12px 2px rgba(103,232,249,.7)"></span>
+        <span style="width:12px;height:12px;border-radius:50%;background:#67E8F9;box-shadow:0 0 12px 2px rgba(103,232,249,.7)"></span>
+      </div>
+    </div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#67E8F9;margin-bottom:14px">{{ soonTag }}</div>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:600;letter-spacing:-.02em;margin:0 0 12px">{{ soonName }}</h2>
+    <p style="font-size:15px;line-height:1.6;color:#9BA8B0;margin:0 0 26px">This module is scoped for a later phase. Command Center and Itinerary are live now.</p>
+    <button onClick="{{ goCommand }}" style="padding:16px 28px;border:none;border-radius:100px;background:#DFFF00;color:#050A0D;font-size:12px;font-weight:800;letter-spacing:.12em;cursor:pointer">BACK TO COMMAND CENTER</button>
+  </div>
+</section>
+</sc-if>
+
+<sc-if value="{{ healthOpen }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeHealth }}" style="position:fixed;inset:0;z-index:60;background:rgba(5,10,13,.82);backdrop-filter:blur(10px);display:flex;align-items:flex-start;justify-content:center;padding:clamp(20px,4vh,56px) 20px;overflow-y:auto">
+  <div onClick="{{ stop }}" style="width:100%;max-width:900px;padding:clamp(26px,3.4vw,40px);border-radius:28px;background:linear-gradient(165deg,#142329,#0B1418);border:1px solid rgba(223,255,0,.22);box-shadow:0 50px 120px -40px rgba(0,0,0,.95);animation:risein .35s ease both">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:30px">
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#DFFF00;margin-bottom:12px">TRIP HEALTH SCORE</div>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(24px,3vw,32px);font-weight:600;letter-spacing:-.02em;margin:0">What's holding your trip together</h2>
+      </div>
+      <button onClick="{{ closeHealth }}" style="width:40px;height:40px;flex:none;border-radius:14px;background:#101B20;border:1px solid rgba(155,168,176,.18);color:#9BA8B0;font-size:16px;cursor:pointer">✕</button>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:clamp(24px,4vw,44px);align-items:center;margin-bottom:30px">
+      <div style="position:relative;width:190px;height:190px;flex:none">
+        <svg viewBox="0 0 190 190" style="width:190px;height:190px;transform:rotate(-90deg)">
+          <circle cx="95" cy="95" r="82" fill="none" stroke="rgba(155,168,176,.14)" stroke-width="12"/>
+          <circle cx="95" cy="95" r="82" fill="none" stroke="#DFFF00" stroke-width="12" stroke-linecap="round" stroke-dasharray="448 515" style="filter:drop-shadow(0 0 12px rgba(223,255,0,.5))"/>
+        </svg>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:54px;font-weight:700;letter-spacing:-.03em;line-height:1">87</span>
+          <span style="font-size:13px;color:#9BA8B0;margin-top:2px">out of 100</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:#DFFF00;margin-top:8px">GOOD</span>
+        </div>
+      </div>
+      <div style="flex:1;min-width:260px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(130px,100%),1fr));gap:14px">
+        <sc-for list="{{ factors }}" as="f" hint-placeholder-count="6">
+          <div style="padding:16px;border-radius:18px;background:#101B20;border:1px solid rgba(155,168,176,.1);display:flex;flex-direction:column;align-items:center;gap:11px;text-align:center">
+            <div style="position:relative;width:62px;height:62px">
+              <svg viewBox="0 0 62 62" style="width:62px;height:62px;transform:rotate(-90deg)">
+                <circle cx="31" cy="31" r="26" fill="none" stroke="rgba(155,168,176,.15)" stroke-width="6"/>
+                <circle cx="31" cy="31" r="26" fill="none" stroke="{{ f.color }}" stroke-width="6" stroke-linecap="round" stroke-dasharray="{{ f.dash }}"/>
+              </svg>
+              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700">{{ f.value }}</div>
+            </div>
+            <div style="font-size:12px;font-weight:600;line-height:1.35">{{ f.label }}</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;color:{{ f.color }}">{{ f.state }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between;padding:22px 24px;border-radius:22px;background:rgba(255,107,95,.08);border:1px solid rgba(255,107,95,.32)">
+      <div style="display:flex;align-items:center;gap:18px;min-width:260px;flex:1">
+        <span style="width:44px;height:44px;flex:none;border-radius:15px;background:rgba(255,107,95,.14);display:flex;align-items:center;justify-content:center;color:#FF6B5F;font-size:18px">!</span>
+        <div>
+          <div style="font-size:15px;font-weight:600;margin-bottom:4px">Traffic reduced your Trip Health Score from <span style="color:#F8FAFC">87</span> → <span style="color:#FF6B5F">71</span>.</div>
+          <div style="font-size:12.5px;color:#9BA8B0">Federal Highway congestion adds 40 min before A Famosa.</div>
+        </div>
+      </div>
+      <button onClick="{{ goRescue }}" style="padding:17px 30px;border:none;border-radius:100px;background:#DFFF00;color:#050A0D;font-size:12.5px;font-weight:800;letter-spacing:.12em;cursor:pointer;box-shadow:0 16px 40px -14px rgba(223,255,0,.55)" style-hover="background:#B9E900">FIX MY TRIP</button>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:950}}">
+const NAV = [
+  ["Command Center", "command"], ["Itinerary", "itinerary"],
+  ["3D Map Explorer", "link", "EscapeSync Phase 4.dc.html"],
+  ["Budget Brain", "link", "EscapeSync Phase 6.dc.html"],
+  ["Rescue Mode", "link", "EscapeSync Phase 5.dc.html"],
+  ["Recommendations", "link", "EscapeSync Phase 6.dc.html#options"],
+  ["Crew", "link", "EscapeSync Phase 2.dc.html#crew"],
+  ["Pip Assistant", "link", "EscapeSync Phase 7.dc.html"],
+  ["Trip History", "demo", "history"],
+  ["Settings", "demo", "settings"]
+];
+
+const DAYS = {
+  1: {
+    meta: "Fri, 12 Sep · 5 stops · 3.1 km walking",
+    items: [
+      { time: "08:00", name: "KL Sentral Departure", location: "KL Sentral, Kuala Lumpur", cost: "RM 28", travel: "2 h 10 m", mode: "Coach", travelIcon: "◍", fit: "94%", weather: "Clear", weatherIcon: "☀", slotHint: "KL Sentral hall" },
+      { time: "10:15", name: "Hotel Check-In", location: "Hatten Place, Melaka", cost: "RM 95", travel: "8 min", mode: "Walk", travelIcon: "⏙", fit: "90%", weather: "Clear", weatherIcon: "☀", slotHint: "hotel lobby" },
+      { time: "12:00", name: "Jonker Street", location: "Jonker Walk, Melaka", cost: "RM 40", travel: "12 min", mode: "Walk", travelIcon: "⏙", fit: "96%", weather: "Humid", weatherIcon: "◐", slotHint: "Jonker Street" },
+      { time: "15:30", name: "A Famosa", location: "Bandar Hilir, Melaka", cost: "RM 0", travel: "14 min", mode: "Grab", travelIcon: "◈", fit: "72%", weather: "Rain risk", weatherIcon: "☂", slotHint: "A Famosa gate" },
+      { time: "19:00", name: "Dinner", location: "Riverside, Melaka", cost: "RM 55", travel: "10 min", mode: "Walk", travelIcon: "⏙", fit: "88%", weather: "Clear", weatherIcon: "☀", slotHint: "riverside dinner" }
+    ]
+  },
+  2: {
+    meta: "Sat, 13 Sep · 4 stops · 2.4 km walking",
+    items: [
+      { time: "09:00", name: "Nyonya Breakfast", location: "Heeren Street, Melaka", cost: "RM 22", travel: "6 min", mode: "Walk", travelIcon: "⏙", fit: "93%", weather: "Clear", weatherIcon: "☀", slotHint: "nyonya breakfast" },
+      { time: "11:00", name: "Baba & Nyonya Museum", location: "Jalan Tun Tan Cheng Lock", cost: "RM 25", travel: "9 min", mode: "Walk", travelIcon: "⏙", fit: "89%", weather: "Clear", weatherIcon: "☀", slotHint: "museum interior" },
+      { time: "15:00", name: "Melaka River Cruise", location: "Muara Jetty", cost: "RM 30", travel: "12 min", mode: "Grab", travelIcon: "◈", fit: "91%", weather: "Cloudy", weatherIcon: "◐", slotHint: "river cruise" },
+      { time: "18:30", name: "Sunset at Klebang", location: "Klebang Beach", cost: "RM 15", travel: "20 min", mode: "Grab", travelIcon: "◈", fit: "86%", weather: "Clear", weatherIcon: "☀", slotHint: "beach sunset" }
+    ]
+  },
+  3: {
+    meta: "Sun, 14 Sep · 3 stops · 1.6 km walking",
+    items: [
+      { time: "09:30", name: "Slow Café Morning", location: "Kampung Hulu, Melaka", cost: "RM 18", travel: "5 min", mode: "Walk", travelIcon: "⏙", fit: "95%", weather: "Clear", weatherIcon: "☀", slotHint: "café morning" },
+      { time: "12:00", name: "Souvenir Run", location: "Jonker Walk, Melaka", cost: "RM 35", travel: "7 min", mode: "Walk", travelIcon: "⏙", fit: "80%", weather: "Humid", weatherIcon: "◐", slotHint: "souvenir stalls" },
+      { time: "15:00", name: "Coach Back to KL", location: "Melaka Sentral", cost: "RM 28", travel: "2 h 10 m", mode: "Coach", travelIcon: "◍", fit: "92%", weather: "Rain risk", weatherIcon: "☂", slotHint: "coach terminal" }
+    ]
+  }
+};
+
+const MAP_STOPS = [
+  { n: 1, name: "Hotel", x: 20, y: 74 },
+  { n: 2, name: "Jonker Street", x: 35, y: 64 },
+  { n: 3, name: "River Cruise", x: 50, y: 54 },
+  { n: 4, name: "A Famosa", x: 65, y: 45 },
+  { n: 5, name: "Dinner", x: 79, y: 36 }
+];
+
+const MAP_BUILDINGS = [
+  [5, 62, 7, 5, 30], [16, 70, 6, 4, 20], [23, 55, 9, 6, 42], [30, 74, 5, 4, 16],
+  [38, 58, 8, 5, 28], [44, 70, 6, 5, 36], [46, 40, 7, 5, 50], [56, 62, 6, 4, 22],
+  [60, 30, 8, 6, 56], [66, 52, 5, 4, 18], [72, 22, 7, 5, 40], [78, 44, 6, 5, 30],
+  [84, 34, 5, 4, 24], [90, 46, 7, 5, 34]
+];
+
+const _FP = (n) => "https://commons.wikimedia.org/wiki/Special:FilePath/" + encodeURIComponent(n) + "?width=600";
+const ITIN_PHOTOS = {
+  _default: _FP("Dutch Square Malacca.JPG"),
+  "Jonker Street": _FP("Jalan Hang Kasturi during Jonker Street Night Market in Melaka, Malaysia.jpg"),
+  "Souvenir Run": _FP("Jalan Hang Kasturi during Jonker Street Night Market in Melaka, Malaysia.jpg"),
+  "A Famosa": _FP("010187 00001 A Famosa (Porta de Santiago), Melaka - Malaysia.jpg"),
+  "Melaka River Cruise": _FP("Melaka River Cruise.jpg"),
+  "Baba & Nyonya Museum": _FP("St. Paul's Church Malacca 2012.JPG")
+};
+
+class Component extends DCLogic {
+  state = { view: window.location.hash === "#itinerary" ? "itinerary" : "command", soonName: "3D Map Explorer", day: 1, healthOpen: false };
+
+  select = (name, view, href) => () => {
+    if (view === "link" && href) { window.location.href = href; return; }
+    if (view === "demo" && window.EscapeSyncApp) { EscapeSyncApp.runAction(href); return; }
+    this.setState({ view, soonName: name, healthOpen: false });
+    window.scrollTo(0, 0);
+  };
+
+  addActivity = () => {
+    if (window.EscapeSyncApp) EscapeSyncApp.openDemo("Add activity", "Choose a time and place to add a custom stop to this itinerary.");
+  };
+
+  goRescue = () => {
+    if (window.EscapeSyncApp) EscapeSyncApp.navigate("rescue", "plan-b");
+    else window.location.href = "EscapeSync Phase 5.dc.html#plan-b";
+  };
+
+  renderVals() {
+    const s = this.state;
+    const nav = NAV.map(([name, view, href]) => {
+      const active = (view === "soon" && s.view === "soon" && s.soonName === name) || (view === "command" || view === "itinerary" ? s.view === view : false);
+      const live = view !== "soon";
+      return { name, select: this.select(name, view, href),
+        bg: active ? "#142329" : "transparent",
+        fg: active ? "#F8FAFC" : "#9BA8B0",
+        weight: active ? 600 : 500,
+        dot: active ? "#DFFF00" : (live ? "rgba(0,214,201,.6)" : "rgba(155,168,176,.3)"),
+        tag: live ? "" : "P4",
+        tagColor: "rgba(155,168,176,.5)" };
+    });
+
+    const avatars = ["Alice", "Ben", "Chris", "David"].map(n => ({ name: n, slotId: "crew2-" + n.toLowerCase() }));
+
+    const day = DAYS[s.day];
+    const items = day.items.map((it, i) => {
+      const fitLow = parseInt(it.fit, 10) < 80;
+      const risky = it.weather === "Rain risk";
+      return { ...it, slotId: "itin-d" + s.day + "-" + i,
+        photo: ITIN_PHOTOS[it.name] || ITIN_PHOTOS._default,
+        dot: i === 2 && s.day === 1 ? "#DFFF00" : "#00D6C9",
+        glow: i === 2 && s.day === 1 ? "rgba(223,255,0,.8)" : "rgba(0,214,201,.7)",
+        timeColor: "#67E8F9",
+        border: risky ? "rgba(255,184,77,.3)" : "rgba(155,168,176,.11)",
+        fitBg: fitLow ? "rgba(255,184,77,.14)" : "rgba(110,231,168,.12)",
+        fitColor: fitLow ? "#FFB84D" : "#6EE7A8",
+        weatherColor: risky ? "#FFB84D" : "#9BA8B0" };
+    });
+
+    const condensed = DAYS[1].items.map((it, i) => ({
+      time: it.time, name: it.name, meta: it.cost + " · " + it.fit + " fit",
+      dot: i === 2 ? "#DFFF00" : "#00D6C9",
+      glow: i === 2 ? "rgba(223,255,0,.8)" : "rgba(0,214,201,.6)",
+      timeColor: i === 2 ? "#DFFF00" : "#67E8F9"
+    }));
+
+    const dayTabs = [1, 2, 3].map(n => ({
+      label: "DAY " + n, select: () => this.setState({ day: n }),
+      bg: s.day === n ? "#DFFF00" : "transparent",
+      fg: s.day === n ? "#050A0D" : "#9BA8B0"
+    }));
+
+    const C = 2 * Math.PI * 26;
+    const factorData = [
+      ["Budget Fit", 92, "STRONG", "#6EE7A8"],
+      ["Travel Time", 78, "OK", "#DFFF00"],
+      ["Group Satisfaction", 90, "STRONG", "#6EE7A8"],
+      ["Walking Load", 64, "WATCH", "#FFB84D"],
+      ["Weather Resilience", 71, "WATCH", "#FFB84D"],
+      ["Schedule Risk", 83, "OK", "#DFFF00"]
+    ];
+    const factors = factorData.map(([label, value, state, color]) => ({
+      label, value, state, color,
+      dash: (C * value / 100).toFixed(1) + " " + C.toFixed(1)
+    }));
+
+    const win = (op) => "repeating-linear-gradient(90deg,rgba(103,232,249," + op + ") 0 2px,rgba(0,0,0,0) 2px 8px),repeating-linear-gradient(180deg,rgba(0,0,0,.35) 0 1px,rgba(0,0,0,0) 1px 9px)";
+    const nearRoute = (cx, cy) => MAP_STOPS.some((a, i) => {
+      const b = MAP_STOPS[i + 1];
+      if (!b) return false;
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const t = Math.max(0, Math.min(1, ((cx - a.x) * dx + (cy - a.y) * dy) / (dx * dx + dy * dy)));
+      return Math.hypot(cx - (a.x + t * dx), (cy - (a.y + t * dy)) * 1.4) < 7;
+    });
+    const mapBuildings = MAP_BUILDINGS.filter(([left, top, w, h]) => !nearRoute(left + w / 2, top + h / 2)).map(([left, top, w, h, z]) => {
+      const tall = z > 40;
+      return {
+        left: left + "%", top: top + "%", w: w + "%", h: h + "%", z: z + "px",
+        roof: tall ? "linear-gradient(150deg,#2E4C57,#16292F)" : "linear-gradient(150deg,#223B44,#122229)",
+        front: win(tall ? ".16" : ".1") + ",linear-gradient(180deg,#1B333B,#0A171D)",
+        side: win(".07") + ",linear-gradient(180deg,#12252C,#071216)",
+        edge: tall ? "rgba(103,232,249,.28)" : "rgba(103,232,249,.15)",
+        shadowX: Math.round(z * 0.18) + "px", shadowY: Math.round(z * 0.5) + "px"
+      };
+    });
+    const mapStops = MAP_STOPS.map(st => ({
+      ...st, left: st.x + "%", top: st.y + "%", z: "0px",
+      bg: st.n === 2 ? "#DFFF00" : "#00D6C9",
+      glow: st.n === 2 ? "rgba(223,255,0,.75)" : "rgba(0,214,201,.6)",
+      labelColor: st.n === 2 ? "#DFFF00" : "#F8FAFC"
+    }));
+    const p = MAP_STOPS.map(st => [st.x * 10, st.y * 7]);
+    let mapRoute = "M " + p[0][0] + " " + p[0][1];
+    for (let i = 1; i < p.length; i++) {
+      const [px, py] = p[i - 1], [cx, cy] = p[i];
+      mapRoute += " C " + (px + (cx - px) * 0.45) + " " + py + ", " + (cx - (cx - px) * 0.45) + " " + cy + ", " + cx + " " + cy;
+    }
+
+    return {
+      nav, avatars, condensed, items, dayTabs, factors,
+      mapBuildings, mapStops, mapRoute,
+      mapPlane: "rotateX(58deg) rotateZ(-14deg) scale(1)",
+      mapCounter: "rotateZ(14deg) rotateX(-58deg)",
+      dayMeta: day.meta,
+      onCommand: s.view === "command", onItinerary: s.view === "itinerary", onSoon: s.view === "soon",
+      soonName: s.soonName, soonTag: "PHASE 4 MODULE",
+      goCommand: this.select("Command Center", "command"),
+      goItinerary: this.select("Itinerary", "itinerary"),
+      goMapExplorer: () => { window.location.href = "EscapeSync Phase 4.dc.html"; },
+      addActivity: this.addActivity,
+      goRescue: this.goRescue,
+      healthOpen: s.healthOpen,
+      openHealth: () => this.setState({ healthOpen: true }),
+      closeHealth: () => this.setState({ healthOpen: false }),
+      stop: (e) => e.stopPropagation()
+    };
+  }
+}
+</script>
+</body>
+</html>

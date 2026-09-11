@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<script src="./app.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #050A0D; color: #F8FAFC; font-family: Manrope, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #DFFF00; text-decoration: none; }
+  a:hover { color: #B9E900; }
+  button { font-family: inherit; }
+  @keyframes dashflow { to { stroke-dashoffset: -1400; } }
+  @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+  @keyframes pulseglow { 0%,100% { opacity: .5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.16); } }
+  @keyframes blip { 0%,100% { opacity: 1; } 50% { opacity: .25; } }
+  @keyframes risein { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+</style>
+</helmet>
+
+<div style="max-width:100%;overflow-x:hidden;min-height:100vh">
+
+<nav style="position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:16px clamp(20px,4vw,36px);background:rgba(5,10,13,.78);backdrop-filter:blur(18px);border-bottom:1px solid rgba(155,168,176,.12)">
+  <a href="EscapeSync Phase 3.dc.html" style="display:flex;align-items:center;gap:9px;padding:10px 16px;border-radius:100px;background:rgba(16,27,32,.9);border:1px solid rgba(155,168,176,.14);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#9BA8B0;text-decoration:none;white-space:nowrap;order:-1" style-hover="border-color:rgba(0,214,201,.5);color:#67E8F9"><span style="font-size:12px">◀</span>COMMAND CENTER</a>
+  <div style="display:flex;align-items:center;gap:11px">
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="13" stroke="#67E8F9" stroke-opacity=".35" stroke-width="1.5"/>
+      <path d="M5 21c6 0 6-10 11-10s5 10 11 10" stroke="#00D6C9" stroke-width="2.4" stroke-linecap="round"/>
+      <circle cx="16" cy="11" r="4" fill="#DFFF00"/>
+    </svg>
+    <a href="EscapeSync Phase 1.dc.html" data-nav-home="1" style="text-decoration:none;color:inherit;display:inline-flex"><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;letter-spacing:-.3px">Escape<span style="color:#DFFF00">Sync</span></span></a>
+    <span style="margin-left:10px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#9BA8B0">MOBILE APP · 8 SCREENS</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;padding:9px 15px;border-radius:100px;background:rgba(0,214,201,.08);border:1px solid rgba(0,214,201,.28);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#67E8F9">
+    <span style="width:6px;height:6px;border-radius:50%;background:#00D6C9;animation:blip 1.8s ease-in-out infinite"></span>ALEX TAN · DAY 2 OF 3
+  </div>
+</nav>
+
+<section data-screen-label="Mobile app gallery" style="padding:clamp(30px,4vw,56px) clamp(20px,4vw,36px) 90px;animation:risein .4s ease both">
+  <div style="max-width:1400px;margin:0 auto">
+    <div style="max-width:600px;margin-bottom:clamp(30px,4vw,48px)">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.14em;color:#00D6C9;margin-bottom:14px">THE LIVE TRAVEL COMPANION</div>
+      <h1 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(32px,4.6vw,50px);line-height:1.04;letter-spacing:-.035em;font-weight:700;margin:0 0 12px">Mobile app</h1>
+      <p style="font-size:16px;line-height:1.6;color:#9BA8B0;margin:0">Eight screens sharing one bottom nav, one card language and one assistant. Everything glanceable in a second.</p>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:clamp(24px,3vw,40px);justify-content:flex-start">
+
+      <div style="flex:none;width:360px">
+        <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:14px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#DFFF00">01</span>
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600">Home</span>
+        </div>
+        <div style="position:relative;width:360px;height:760px;border-radius:46px;padding:10px;background:linear-gradient(160deg,#22343C,#0B1418);box-shadow:0 50px 100px -40px rgba(0,0,0,.95),inset 0 1px 0 rgba(248,250,252,.14)">
+          <div style="position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:#050A0D;display:flex;flex-direction:column">
+            <div style="display:flex;justify-content:space-between;padding:14px 20px 4px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0"><span>9:41</span><span>◍ ◈ ▮</span></div>
+            <div style="flex:1;min-height:0;overflow-y:auto;padding:16px 18px 14px">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px">
+                <div>
+                  <div style="font-size:14px;color:#9BA8B0;margin-bottom:6px">Good morning, Alex 👋</div>
+                  <div style="font-family:'Space Grotesk',sans-serif;font-size:23px;line-height:1.15;font-weight:700;letter-spacing:-.02em">Ready for your next adventure?</div>
+                </div>
+                <div style="width:42px;height:42px;flex:none;border-radius:50%;overflow:hidden;border:1px solid rgba(103,232,249,.3)"><image-slot id="alex-avatar" shape="circle" placeholder="Alex"></image-slot></div>
+              </div>
+
+              <div style="border-radius:24px;overflow:hidden;background:linear-gradient(165deg,#142329,#0B1418);border:1px solid rgba(223,255,0,.24);margin-bottom:16px">
+                <div style="position:relative;height:118px">
+                  <image-slot id="trip-hero" shape="rect" src="https://commons.wikimedia.org/wiki/Special:FilePath/Dutch%20Square%20Malacca.JPG?width=900" credit="Wikimedia Commons" credit-href="https://commons.wikimedia.org/wiki/Category:Melaka" placeholder="Melaka street at dusk"></image-slot>
+                  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,10,13,.2),rgba(5,10,13,.92))"></div>
+                  <div style="position:absolute;left:16px;bottom:12px">
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.14em;color:#DFFF00;margin-bottom:6px">DAY 2 OF 3</div>
+                    <div style="font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:600">Kuala Lumpur → Melaka</div>
+                  </div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(155,168,176,.1)">
+                  <sc-for list="{{ homeStats }}" as="s" hint-placeholder-count="4">
+                    <div style="padding:14px 16px;background:#101B20">
+                      <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.12em;color:#9BA8B0;margin-bottom:6px">{{ s.label }}</div>
+                      <div style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600;color:{{ s.color }}">{{ s.value }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.14em;color:#9BA8B0;margin-bottom:12px">UP NEXT</div>
+              <div style="padding:16px;border-radius:22px;background:#101B20;border:1px solid rgba(0,214,201,.28)">
+                <div style="display:flex;align-items:center;gap:13px;margin-bottom:14px">
+                  <div style="width:52px;height:52px;flex:none;border-radius:16px;overflow:hidden"><image-slot id="stop-3" shape="rounded" radius="16" src="https://commons.wikimedia.org/wiki/Special:FilePath/Melaka%20River%20Cruise.jpg?width=900" credit="Wikimedia Commons" credit-href="https://commons.wikimedia.org/wiki/Category:Melaka" placeholder="river cruise"></image-slot></div>
+                  <div style="flex:1;min-width:0">
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#67E8F9;margin-bottom:4px">12:30</div>
+                    <div style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600">Melaka River Cruise</div>
+                    <div style="font-size:11.5px;color:#9BA8B0;margin-top:3px">2.1 km · 18 min · RM30</div>
+                  </div>
+                </div>
+                <button onClick="{{ mobileRoute }}" style="width:100%;padding:15px;border:none;border-radius:100px;background:#DFFF00;color:#050A0D;font-size:11.5px;font-weight:800;letter-spacing:.1em;cursor:pointer">VIEW ROUTE</button>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-around;padding:12px 8px 18px;background:rgba(11,20,24,.96);border-top:1px solid rgba(155,168,176,.12)">
+              <sc-for list="{{ navHome }}" as="n" hint-placeholder-count="5">
+                <span style="display:flex;flex-direction:column;align-items:center;gap:5px;min-width:52px">
+                  <span style="font-size:16px;color:{{ n.color }}">{{ n.glyph }}</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.08em;color:{{ n.color }}">{{ n.label }}</span>
+                </span>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="flex:none;width:360px">
+        <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:14px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#DFFF00">02</span>
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600">Disruption notification</span>
+        </div>
+        <div style="position:relative;width:360px;height:760px;border-radius:46px;padding:10px;background:linear-gradient(160deg,#22343C,#0B1418);box-shadow:0 50px 100px -40px rgba(0,0,0,.95),inset 0 1px 0 rgba(248,250,252,.14)">
+          <div style="position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:#050A0D">
+            <div style="position:absolute;inset:0;opacity:.4">
+              <svg viewBox="0 0 340 740" preserveAspectRatio="none" style="width:100%;height:100%">
+                <g stroke="rgba(103,232,249,.1)" stroke-width="1.4"><path d="M0 560 L340 500"/><path d="M0 460 L340 400"/><path d="M0 360 L340 300"/><path d="M90 740 L90 0"/><path d="M200 740 L200 0"/><path d="M300 740 L300 0"/></g>
+                <path d="M20 600 C 90 580 130 470 200 430 S 300 340 340 300" stroke="#00D6C9" stroke-width="4" fill="none" stroke-linecap="round" style="filter:drop-shadow(0 0 10px rgba(0,214,201,.7))"/>
+                <path d="M20 600 C 90 580 130 470 200 430 S 300 340 340 300" stroke="#F8FAFC" stroke-width="2" fill="none" stroke-dasharray="20 180" style="animation:dashflow 5s linear infinite"/>
+              </svg>
+            </div>
+            <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,10,13,.55),rgba(5,10,13,.95))"></div>
+            <div style="position:relative;display:flex;justify-content:space-between;padding:14px 20px 4px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0"><span>14:12</span><span>◍ ◈ ▮</span></div>
+
+            <div style="position:absolute;left:14px;right:14px;top:70px;padding:20px;border-radius:26px;background:rgba(11,20,24,.96);backdrop-filter:blur(20px);border:1px solid rgba(255,184,77,.36);box-shadow:0 30px 70px -24px rgba(0,0,0,.95)">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+                <span style="width:36px;height:36px;flex:none;border-radius:13px;background:rgba(255,184,77,.14);display:flex;align-items:center;justify-content:center;color:#FFB84D;font-size:17px">☂</span>
+                <div style="flex:1;min-width:0">
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;color:#FFB84D">PIP · WEATHER ALERT</div>
+                  <div style="font-size:11px;color:#9BA8B0;margin-top:3px">now · Melaka</div>
+                </div>
+              </div>
+              <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:20px">
+                <div style="position:relative;width:56px;height:64px;flex:none;animation:floaty 5s ease-in-out infinite">
+                  <div style="position:absolute;left:50%;top:3px;transform:translateX(-50%);width:2px;height:11px;background:#FFB84D"></div>
+                  <div style="position:absolute;left:50%;top:-3px;transform:translateX(-50%);width:10px;height:10px;border-radius:50%;background:#FFB84D;box-shadow:0 0 14px 4px rgba(255,184,77,.55);animation:pulseglow 1.6s ease-in-out infinite"></div>
+                  <div style="position:absolute;left:0;top:12px;width:56px;height:48px;border-radius:19px;background:linear-gradient(165deg,#22343C,#0B1418);border:1px solid rgba(255,184,77,.3)"></div>
+                  <div style="position:absolute;left:6px;top:21px;width:44px;height:30px;border-radius:15px;background:#050A0D;display:flex;align-items:center;justify-content:center;gap:9px">
+                    <span style="width:9px;height:11px;border-radius:4px;background:#67E8F9;box-shadow:0 0 10px 2px rgba(103,232,249,.75)"></span>
+                    <span style="width:9px;height:11px;border-radius:4px;background:#67E8F9;box-shadow:0 0 10px 2px rgba(103,232,249,.75)"></span>
+                  </div>
+                </div>
+                <div style="flex:1;min-width:0">
+                  <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:600;line-height:1.25;margin-bottom:7px">Heavy rain expected at 2:30 PM.</div>
+                  <div style="font-size:13px;line-height:1.5;color:#9BA8B0">Two outdoor activities may be affected.</div>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <button onClick="{{ mobileRescue }}" style="width:100%;padding:16px;border:none;border-radius:100px;background:#DFFF00;color:#050A0D;font-size:11.5px;font-weight:800;letter-spacing:.1em;cursor:pointer">RESCUE MY DAY</button>
+                <button onClick="{{ mobileKeep }}" style="width:100%;padding:16px;border-radius:100px;border:1px solid rgba(248,250,252,.2);background:rgba(248,250,252,.04);color:#F8FAFC;font-size:11.5px;font-weight:700;letter-spacing:.1em;cursor:pointer">KEEP CURRENT PLAN</button>
+              </div>
+            </div>
+
+            <div style="position:absolute;left:14px;right:14px;bottom:92px;padding:16px 18px;border-radius:22px;background:rgba(16,27,32,.9);backdrop-filter:blur(16px);border:1px solid rgba(155,168,176,.14)">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;color:#9BA8B0;margin-bottom:9px">AT RISK</div>
+              <div style="font-size:13px;line-height:1.6;color:#F8FAFC">15:00 Outdoor Market · 15:30 Viewpoint Walk</div>
+            </div>
+
+            <div style="position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:12px 8px 18px;background:rgba(11,20,24,.96);border-top:1px solid rgba(155,168,176,.12)">
+              <sc-for list="{{ navHome }}" as="n" hint-placeholder-count="5">
+                <span style="display:flex;flex-direction:column;align-items:center;gap:5px;min-width:52px">
+                  <span style="font-size:16px;color:{{ n.color }}">{{ n.glyph }}</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.08em;color:{{ n.color }}">{{ n.label }}</span>
+                </span>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="flex:none;width:360px">
+        <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:14px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#DFFF00">03</span>
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600">Rescue Mode</span>
+        </div>
+        <div style="position:relative;width:360px;height:760px;border-radius:46px;padding:10px;background:linear-gradient(160deg,#22343C,#0B1418);box-shadow:0 50px 100px -40px rgba(0,0,0,.95),inset 0 1px 0 rgba(248,250,252,.14)">
+          <div style="position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:#050A0D;display:flex;flex-direction:column">
+            <div style="display:flex;justify-content:space-between;padding:14px 20px 4px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0"><span>14:14</span><span>◍ ◈ ▮</span></div>
+            <div style="flex:1;min-height:0;overflow-y:auto;padding:18px 18px 14px">
+              <div style="display:inline-flex;align-items:center;gap:9px;padding:7px 13px;border-radius:100px;background:rgba(255,107,95,.1);border:1px solid rgba(255,107,95,.34);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.12em;color:#FF6B5F;margin-bottom:18px">
+                <span style="width:5px;height:5px;border-radius:50%;background:#FF6B5F;animation:blip 1.4s ease-in-out infinite"></span>HEAVY RAIN
+              </div>
+              <h2 style="font-family:'Space Grotesk',sans-serif;font-size:29px;line-height:1.08;letter-spacing:-.025em;font-weight:700;margin:0 0 22px">Disruption detected</h2>
+
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.14em;color:#9BA8B0;margin-bottom:12px">IMPACT</div>
+              <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:22px">
+                <sc-for list="{{ impact }}" as="i" hint-placeholder-count="3">
+                  <div style="display:flex;align-items:center;gap:13px;padding:15px 16px;border-radius:18px;background:#101B20;border:1px solid rgba(255,184,77,.24)">
+                    <span style="width:30px;height:30px;flex:none;border-radius:11px;background:rgba(255,184,77,.13);display:flex;align-items:center;justify-content:center;color:#FFB84D;font-size:14px">{{ i.glyph }}</span>
+                    <span style="flex:1;min-width:0;font-size:14px;font-weight:600;line-height:1.35">{{ i.text }}</span>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="display:flex;gap:14px;align-items:flex-start;padding:18px;border-radius:22px;background:linear-gradient(160deg,rgba(0,214,201,.1),rgba(11,20,24,.92));border:1px solid rgba(0,214,201,.3);margin-bottom:20px">
+                <div style="position:relative;width:56px;height:64px;flex:none;animation:floaty 5s ease-in-out infinite">
+                  <div style="position:absolute;left:50%;top:3px;transform:translateX(-50%);width:2px;height:11px;background:#B9E900"></div>
+                  <div style="position:absolute;left:50%;top:-3px;transform:translateX(-50%);width:9px;height:9px;border-radius:50%;background:#DFFF00;box-shadow:0 0 13px 3px rgba(223,255,0,.5)"></div>
+                  <div style="position:absolute;left:0;top:12px;width:56px;height:48px;border-radius:19px;background:linear-gradient(165deg,#1B2E36,#0B1418);border:1px solid rgba(103,232,249,.24)"></div>
+                  <div style="position:absolute;left:6px;top:21px;width:44px;height:30px;border-radius:15px;background:#050A0D;display:flex;align-items:center;justify-content:center;gap:9px">
+                    <span style="width:9px;height:9px;border-radius:50%;background:#67E8F9;box-shadow:0 0 10px 2px rgba(103,232,249,.75)"></span>
+                    <span style="width:9px;height:9px;border-radius:50%;background:#67E8F9;box-shadow:0 0 10px 2px rgba(103,232,249,.75)"></span>
+                  </div>
+                </div>
+                <div style="flex:1;min-width:0;font-size:14px;line-height:1.55">I can rebuild your afternoon without changing your dinner booking.</div>
+              </div>
+
+              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px">
+                <sc-for list="{{ protectedChips }}" as="c" hint-placeholder-count="3">
+                  <span style="display:flex;align-items:center;gap:7px;padding:8px 13px;border-radius:100px;background:rgba(110,231,168,.08);border:1px solid rgba(110,231,168,.26);font-size:11.5px"><span style="color:#6EE7A8">✓</span>{{ c }}</span>
+                </sc-for>
+              </div>
+
+              <button onClick="{{ mobileRescue }}" style="width:100%;padding:18px;border:none;border-radius:100px;background:#DFFF00;color:#050A0D;font-size:12.5px;font-weight:800;letter-spacing:.11em;cursor:pointer;box-shadow:0 16px 40px -14px rgba(223,255,0,.55)">RESCUE MY DAY</button>
+            </div>
+            <div style="display:flex;justify-content:space-around;padding:12px 8px 18px;background:rgba(11,20,24,.96);border-top:1px solid rgba(155,168,176,.12)">
+              <sc-for list="{{ navTrip }}" as="n" hint-placeholder-count="5">
+                <span style="display:flex;flex-direction:column;align-items:center;gap:5px;min-width:52px">
+                  <span style="font-size:16px;color:{{ n.color }}">{{ n.glyph }}</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.08em;color:{{ n.color }}">{{ n.label }}</span>
+                </span>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="flex:none;width:360px">
+        <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:14px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#DFFF00">04</span>
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600">Plan B ready</span>
+        </div>
+        <div style="position:relative;width:360px;height:760px;border-radius:46px;padding:10px;background:linear-gradient(160deg,#22343C,#0B1418);box-shadow:0 50px 100px -40px rgba(0,0,0,.95),inset 0 1px 0 rgba(248,250,252,.14)">
+          <div style="position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:#050A0D;display:flex;flex-direction:column">
+            <div style="position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:340px;height:300px;pointer-events:none;background:radial-gradient(ellipse at center,rgba(223,255,0,.16),rgba(223,255,0,0) 70%)"></div>
+            <div style="position:relative;display:flex;justify-content:space-between;padding:14px 20px 4px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0"><span>14:16</span><span>◍ ◈ ▮</span></div>
+            <div style="position:relative;flex:1;min-height:0;overflow-y:auto;padding:20px 18px 14px">
+              <div style="text-align:center;margin-bottom:24px">
+                <div style="position:relative;width:88px;height:100px;margin:0 auto 20px;animation:floaty 5s ease-in-out infinite">
+                  <div style="position:absolute;left:50%;top:4px;transform:translateX(-50%);width:2px;height:15px;background:#B9E900"></div>
+                  <div style="position:absolute;left:50%;top:-4px;transform:translateX(-50%);width:13px;height:13px;border-radius:50%;background:#DFFF00;box-shadow:0 0 18px 5px rgba(223,255,0,.6);animation:pulseglow 2.4s ease-in-out infinite"></div>
+                  <div style="position:absolute;left:0;top:17px;width:88px;height:75px;border-radius:29px;background:linear-gradient(165deg,#1B2E36,#0B1418);border:1px solid rgba(223,255,0,.3);box-shadow:inset 0 1px 0 rgba(248,250,252,.16)"></div>
+                  <div style="position:absolute;left:11px;top:30px;width:66px;height:45px;border-radius:22px;background:#050A0D;display:flex;align-items:center;justify-content:center;gap:13px">
+                    <span style="width:14px;height:7px;border-radius:7px 7px 0 0;background:#DFFF00;box-shadow:0 0 12px 2px rgba(223,255,0,.6)"></span>
+                    <span style="width:14px;height:7px;border-radius:7px 7px 0 0;background:#DFFF00;box-shadow:0 0 12px 2px rgba(223,255,0,.6)"></span>
+                  </div>
+                </div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.14em;color:#DFFF00;margin-bottom:12px">VALIDATED FOR ALL 4</div>
+                <h2 style="font-family:'Space Grotesk',sans-serif;font-size:31px;line-height:1.05;letter-spacing:-.025em;font-weight:700;margin:0 0 10px">Plan B ready</h2>
+                <p style="font-size:13.5px;line-height:1.55;color:#9BA8B0;margin:0">Dinner untouched. Afternoon rebuilt indoors.</p>
+              </div>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+                <sc-for list="{{ planBStats }}" as="s" hint-placeholder-count="4">
+                  <div style="padding:16px;border-radius:18px;background:#101B20;border:1px solid {{ s.border }}">
+                    <div style="font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:700;color:{{ s.color }};margin-bottom:5px">{{ s.value }}</div>
+                    <div style="font-size:11.5px;color:#9BA8B0;line-height:1.35">{{ s.label }}</div>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="padding:16px;border-radius:20px;background:#0B1418;border:1px solid rgba(155,168,176,.12);margin-bottom:20px">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;color:#9BA8B0;margin-bottom:12px">TRIP HEALTH</div>
+                <div style="display:flex;align-items:center;gap:12px">
+                  <span style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:600;color:#9BA8B0">71</span>
+                  <span style="flex:1;height:6px;border-radius:100px;background:rgba(155,168,176,.16);overflow:hidden"><span style="display:block;height:100%;width:91%;background:linear-gradient(90deg,#00D6C9,#DFFF00)"></span></span>
+                  <span style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:#DFFF00">91</span>
+                </div>
+              </div>
+
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <button onClick="{{ mobileAccept }}" style="width:100%;padding:17px;border:none;border-radius:100px;background:#DFFF00;color:#050A0D;font-size:12px;font-weight:800;letter-spacing:.1em;cursor:pointer;box-shadow:0 16px 40px -14px rgba(223,255,0,.55)">ACCEPT PLAN B</button>
+                <button onClick="{{ mobileChanges }}" style="width:100%;padding:17px;border-radius:100px;border:1px solid rgba(103,232,249,.35);background:rgba(103,232,249,.06);color:#67E8F9;font-size:12px;font-weight:700;letter-spacing:.1em;cursor:pointer">VIEW CHANGES</button>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-around;padding:12px 8px 18px;background:rgba(11,20,24,.96);border-top:1px solid rgba(155,168,176,.12)">
+              <sc-for list="{{ navTrip }}" as="n" hint-placeholder-count="5">
+                <span style="display:flex;flex-direction:column;align-items:center;gap:5px;min-width:52px">
+                  <span style="font-size:16px;color:{{ n.color }}">{{ n.glyph }}</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.08em;color:{{ n.color }}">{{ n.label }}</span>
+                </span>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="flex:none;width:360px">
+        <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:14px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#DFFF00">05</span>
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600">Trip details</span>
+        </div>
+        <div style="position:relative;width:360px;height:760px;border-radius:46px;padding:10px;background:linear-gradient(160deg,#22343C,#0B1418);box-shadow:0 50px 100px -40px rgba(0,0,0,.95),inset 0 1px 0 rgba(248,250,252,.14)">
+          <div style="position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:#050A0D;display:flex;flex-direction:column">
+            <div style="display:flex;justify-content:space-between;padding:14px 20px 4px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0"><span>9:41</span><span>◍ ◈ ▮</span></div>
+            <div style="flex:1;min-height:0;overflow-y:auto;padding:18px 18px 14px">
+              <div style="border-radius:24px;overflow:hidden;margin-bottom:20px;position:relative;height:132px">
+                <image-slot id="trip-hero" shape="rect" src="https://commons.wikimedia.org/wiki/Special:FilePath/Dutch%20Square%20Malacca.JPG?width=900" credit="Wikimedia Commons" credit-href="https://commons.wikimedia.org/wiki/Category:Melaka" placeholder="Melaka street at dusk"></image-slot>
+                <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,10,13,.15),rgba(5,10,13,.93))"></div>
+                <div style="position:absolute;left:16px;bottom:14px">
+                  <h2 style="font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;letter-spacing:-.02em;margin:0 0 6px">Melaka Escape</h2>
+                  <div style="font-size:12.5px;color:#9BA8B0">3 Days · 4 Travellers · RM600/person</div>
+                </div>
+              </div>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
+                <sc-for list="{{ tripLinks }}" as="l" hint-placeholder-count="9">
+                  <button onClick="{{ l.open }}" style="display:flex;align-items:center;gap:11px;text-align:left;cursor:pointer;padding:15px 14px;border-radius:18px;background:#101B20;border:1px solid rgba(155,168,176,.11);color:#F8FAFC" style-hover="border-color:rgba(0,214,201,.4)">
+                    <span style="width:30px;height:30px;flex:none;border-radius:11px;background:{{ l.iconBg }};display:flex;align-items:center;justify-content:center;font-size:14px;color:{{ l.iconFg }}">{{ l.glyph }}</span>
+                    <span style="flex:1;min-width:0;font-size:13px;font-weight:600">{{ l.name }}</span>
+                  </button>
+                </sc-for>
+              </div>
+
+              <button onClick="{{ shareTrip }}" style="width:100%;padding:17px;border:none;border-radius:100px;background:#DFFF00;color:#050A0D;font-size:12px;font-weight:800;letter-spacing:.1em;cursor:pointer">SHARE TRIP</button>
+            </div>
+            <div style="display:flex;justify-content:space-around;padding:12px 8px 18px;background:rgba(11,20,24,.96);border-top:1px solid rgba(155,168,176,.12)">
+              <sc-for list="{{ navTrip }}" as="n" hint-placeholder-count="5">
+                <span style="display:flex;flex-direction:column;align-items:center;gap:5px;min-width:52px">
+                  <span style="font-size:16px;color:{{ n.color }}">{{ n.glyph }}</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.08em;color:{{ n.color }}">{{ n.label }}</span>
+                </span>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="flex:none;width:360px">
+        <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:14px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#DFFF00">06</span>
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600">Plan history</span>
+        </div>
+        <div style="position:relative;width:360px;height:760px;border-radius:46px;padding:10px;background:linear-gradient(160deg,#22343C,#0B1418);box-shadow:0 50px 100px -40px rgba(0,0,0,.95),inset 0 1px 0 rgba(248,250,252,.14)">
+          <div style="position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:#050A0D;display:flex;flex-direction:column">
+            <div style="display:flex;justify-content:space-between;padding:14px 20px 4px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0"><span>19:24</span><span>◍ ◈ ▮</span></div>
+            <div style="flex:1;min-height:0;overflow-y:auto;padding:18px 18px 14px">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.14em;color:#00D6C9;margin-bottom:12px">MELAKA ESCAPE</div>
+              <h2 style="font-family:'Space Grotesk',sans-serif;font-size:28px;line-height:1.08;letter-spacing:-.025em;font-weight:700;margin:0 0 8px">Plan history</h2>
+              <p style="font-size:13px;line-height:1.55;color:#9BA8B0;margin:0 0 24px">Every change, with the reason it happened.</p>
+
+              <div style="position:relative;padding-left:26px">
+                <div style="position:absolute;left:5px;top:8px;bottom:14px;width:2px;background:linear-gradient(180deg,#DFFF00,#00D6C9 50%,rgba(0,214,201,.14));box-shadow:0 0 12px rgba(0,214,201,.5)"></div>
+                <div style="display:flex;flex-direction:column;gap:14px">
+                  <sc-for list="{{ history }}" as="h" hint-placeholder-count="3">
+                    <div style="position:relative">
+                      <div style="position:absolute;left:-26px;top:20px;width:12px;height:12px;border-radius:50%;background:{{ h.dot }};box-shadow:0 0 0 4px #050A0D,0 0 12px {{ h.glow }}"></div>
+                      <div style="padding:16px;border-radius:20px;background:#101B20;border:1px solid {{ h.border }}">
+                        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px">
+                          <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.08em;color:#67E8F9">{{ h.when }}</span>
+                          <span style="padding:4px 10px;border-radius:100px;background:{{ h.tagBg }};font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.1em;color:{{ h.tagColor }}">{{ h.tag }}</span>
+                        </div>
+                        <div style="font-size:14px;font-weight:600;line-height:1.4;margin-bottom:8px">{{ h.title }}</div>
+                        <div style="font-size:12px;color:#9BA8B0;line-height:1.5">{{ h.detail }}</div>
+                        <sc-if value="{{ h.hasLink }}" hint-placeholder-val="{{ false }}">
+                          <button onClick="{{ mobileChanges }}" style="margin-top:12px;padding:0;border:none;background:none;color:#DFFF00;font-size:11px;font-weight:700;letter-spacing:.08em;cursor:pointer">VIEW PLAN A → PLAN B</button>
+                        </sc-if>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-around;padding:12px 8px 18px;background:rgba(11,20,24,.96);border-top:1px solid rgba(155,168,176,.12)">
+              <sc-for list="{{ navTrip }}" as="n" hint-placeholder-count="5">
+                <span style="display:flex;flex-direction:column;align-items:center;gap:5px;min-width:52px">
+                  <span style="font-size:16px;color:{{ n.color }}">{{ n.glyph }}</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.08em;color:{{ n.color }}">{{ n.label }}</span>
+                </span>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="flex:none;width:360px">
+        <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:14px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#DFFF00">07</span>
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600">Profile</span>
+        </div>
+        <div style="position:relative;width:360px;height:760px;border-radius:46px;padding:10px;background:linear-gradient(160deg,#22343C,#0B1418);box-shadow:0 50px 100px -40px rgba(0,0,0,.95),inset 0 1px 0 rgba(248,250,252,.14)">
+          <div style="position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:#050A0D;display:flex;flex-direction:column">
+            <div style="display:flex;justify-content:space-between;padding:14px 20px 4px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0"><span>9:41</span><span>◍ ◈ ▮</span></div>
+            <div style="flex:1;min-height:0;overflow-y:auto;padding:18px 18px 14px">
+              <div style="display:flex;flex-direction:column;align-items:center;text-align:center;margin-bottom:22px">
+                <div style="width:88px;height:88px;border-radius:50%;overflow:hidden;border:1px solid rgba(223,255,0,.35);box-shadow:0 0 0 6px rgba(223,255,0,.07);margin-bottom:16px">
+                  <image-slot id="alex-avatar" shape="circle" placeholder="Alex Tan"></image-slot>
+                </div>
+                <h2 style="font-family:'Space Grotesk',sans-serif;font-size:25px;font-weight:700;letter-spacing:-.02em;margin:0 0 8px">Alex Tan</h2>
+                <span style="padding:7px 14px;border-radius:100px;background:rgba(223,255,0,.1);border:1px solid rgba(223,255,0,.32);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.1em;color:#DFFF00">EXPLORER LEVEL 8</span>
+              </div>
+
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:20px">
+                <sc-for list="{{ profileStats }}" as="p" hint-placeholder-count="3">
+                  <div style="padding:15px 10px;border-radius:18px;background:#101B20;border:1px solid rgba(155,168,176,.11);text-align:center">
+                    <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;margin-bottom:5px">{{ p.value }}</div>
+                    <div style="font-size:10.5px;color:#9BA8B0">{{ p.label }}</div>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="display:flex;flex-direction:column;gap:3px">
+                <sc-for list="{{ profileMenu }}" as="m" hint-placeholder-count="7">
+                  <button onClick="{{ m.open }}" style="display:flex;align-items:center;gap:13px;text-align:left;cursor:pointer;padding:15px 14px;border:none;border-radius:16px;background:transparent;color:#F8FAFC" style-hover="background:#101B20">
+                    <span style="width:30px;height:30px;flex:none;border-radius:11px;background:rgba(103,232,249,.1);display:flex;align-items:center;justify-content:center;font-size:13px;color:#67E8F9">{{ m.glyph }}</span>
+                    <span style="flex:1;min-width:0;font-size:14px;font-weight:600">{{ m.name }}</span>
+                    <span style="color:#5C6B73;font-size:14px">›</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-around;padding:12px 8px 18px;background:rgba(11,20,24,.96);border-top:1px solid rgba(155,168,176,.12)">
+              <sc-for list="{{ navProfile }}" as="n" hint-placeholder-count="5">
+                <span style="display:flex;flex-direction:column;align-items:center;gap:5px;min-width:52px">
+                  <span style="font-size:16px;color:{{ n.color }}">{{ n.glyph }}</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.08em;color:{{ n.color }}">{{ n.label }}</span>
+                </span>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="flex:none;width:360px">
+        <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:14px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#DFFF00">08</span>
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600">Notifications</span>
+        </div>
+        <div style="position:relative;width:360px;height:760px;border-radius:46px;padding:10px;background:linear-gradient(160deg,#22343C,#0B1418);box-shadow:0 50px 100px -40px rgba(0,0,0,.95),inset 0 1px 0 rgba(248,250,252,.14)">
+          <div style="position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:#050A0D;display:flex;flex-direction:column">
+            <div style="display:flex;justify-content:space-between;padding:14px 20px 4px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0"><span>13:58</span><span>◍ ◈ ▮</span></div>
+            <div style="flex:1;min-height:0;overflow-y:auto;padding:18px 18px 14px">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px">
+                <div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.14em;color:#00D6C9;margin-bottom:10px">FROM PIP · DAY 2</div>
+                  <h2 style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;letter-spacing:-.02em;margin:0">Notifications</h2>
+                </div>
+                <span style="padding:6px 12px;border-radius:100px;background:rgba(223,255,0,.12);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;color:#DFFF00">5 NEW</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <sc-for list="{{ notifications }}" as="n" hint-placeholder-count="5">
+                  <div style="display:flex;gap:13px;align-items:flex-start;padding:16px;border-radius:20px;background:#101B20;border:1px solid {{ n.border }}" style-hover="border-color:rgba(0,214,201,.4)">
+                    <span style="width:36px;height:36px;flex:none;border-radius:13px;background:{{ n.iconBg }};display:flex;align-items:center;justify-content:center;font-size:16px;color:{{ n.iconFg }}">{{ n.glyph }}</span>
+                    <span style="flex:1;min-width:0">
+                      <span style="display:block;font-size:13.5px;line-height:1.5;margin-bottom:8px">{{ n.text }}</span>
+                      <span style="display:flex;align-items:center;gap:10px">
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;color:#5C6B73">{{ n.when }}</span>
+                        <sc-if value="{{ n.hasAction }}" hint-placeholder-val="{{ false }}">
+                          <span style="font-size:10.5px;font-weight:700;letter-spacing:.08em;color:#DFFF00">{{ n.action }}</span>
+                        </sc-if>
+                      </span>
+                    </span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-around;padding:12px 8px 18px;background:rgba(11,20,24,.96);border-top:1px solid rgba(155,168,176,.12)">
+              <sc-for list="{{ navPip }}" as="n" hint-placeholder-count="5">
+                <span style="display:flex;flex-direction:column;align-items:center;gap:5px;min-width:52px">
+                  <span style="font-size:16px;color:{{ n.color }}">{{ n.glyph }}</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.08em;color:{{ n.color }}">{{ n.label }}</span>
+                </span>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:1000}}">
+const NAV = [["HOME", "⌂"], ["TRIP", "▤"], ["MAP", "◈"], ["PIP", "◍"], ["PROFILE", "◎"]];
+
+class Component extends DCLogic {
+  openTrip = (name) => () => {
+    if (!window.EscapeSyncApp) return;
+    const routes = { Itinerary: ["command", "itinerary"], "3D Map": ["map"], Budget: ["budget"], Crew: ["builder", "crew"], Weather: ["command"], "Trip Changes": ["rescue", "compare"] };
+    const target = routes[name];
+    if (target) EscapeSyncApp.navigate(target[0], target[1]);
+    else EscapeSyncApp.openDemo(name, name + " is available as a simulated mobile module in this prototype.");
+  };
+
+  openProfile = (name) => () => {
+    if (window.EscapeSyncApp) EscapeSyncApp.openDemo(name, name + " settings are simulated locally for Alex Tan.");
+  };
+
+  nav(active) {
+    return NAV.map(([label, glyph]) => ({
+      label, glyph, color: label === active ? "#DFFF00" : "#5C6B73"
+    }));
+  }
+
+  renderVals() {
+    return {
+      navHome: this.nav("HOME"),
+      navTrip: this.nav("TRIP"),
+      navPip: this.nav("PIP"),
+      navProfile: this.nav("PROFILE"),
+      mobileRoute: () => window.EscapeSyncApp && EscapeSyncApp.runAction("mobile-route"),
+      mobileRescue: () => window.EscapeSyncApp && EscapeSyncApp.runAction("mobile-rescue"),
+      mobileKeep: () => window.EscapeSyncApp && EscapeSyncApp.runAction("mobile-keep"),
+      mobileAccept: () => window.EscapeSyncApp && EscapeSyncApp.runAction("mobile-accept"),
+      mobileChanges: () => window.EscapeSyncApp && EscapeSyncApp.runAction("mobile-changes"),
+      shareTrip: () => window.EscapeSyncApp && EscapeSyncApp.runAction("share"),
+
+      homeStats: [
+        { label: "TRIP HEALTH", value: "87", color: "#DFFF00" },
+        { label: "BUDGET", value: "RM480 left", color: "#F8FAFC" },
+        { label: "WEATHER", value: "28°C", color: "#FFB84D" },
+        { label: "GROUP", value: "4.6/5", color: "#6EE7A8" }
+      ],
+
+      impact: [
+        { glyph: "☂", text: "Outdoor market at risk" },
+        { glyph: "✕", text: "Viewpoint walk unavailable" },
+        { glyph: "◷", text: "Potential 40-minute delay" }
+      ],
+
+      protectedChips: ["Dinner booking held", "River cruise kept", "David's walking cap"],
+
+      planBStats: [
+        { value: "2", label: "Activities replaced", color: "#FFB84D", border: "rgba(255,184,77,.26)" },
+        { value: "RM6", label: "Saved", color: "#DFFF00", border: "rgba(223,255,0,.24)" },
+        { value: "18 min", label: "Saved", color: "#DFFF00", border: "rgba(223,255,0,.24)" },
+        { value: "+14%", label: "Satisfaction", color: "#6EE7A8", border: "rgba(110,231,168,.26)" }
+      ],
+
+      tripLinks: [
+        ["Itinerary", "▤", "rgba(0,214,201,.12)", "#00D6C9"],
+        ["3D Map", "◈", "rgba(103,232,249,.12)", "#67E8F9"],
+        ["Budget", "◫", "rgba(110,231,168,.12)", "#6EE7A8"],
+        ["Crew", "◍", "rgba(0,214,201,.12)", "#00D6C9"],
+        ["Weather", "☂", "rgba(255,184,77,.14)", "#FFB84D"],
+        ["Notes", "✎", "rgba(103,232,249,.12)", "#67E8F9"],
+        ["Documents", "▣", "rgba(155,168,176,.12)", "#9BA8B0"],
+        ["Packing List", "✓", "rgba(110,231,168,.12)", "#6EE7A8"],
+        ["Trip Changes", "⟳", "rgba(223,255,0,.13)", "#DFFF00"]
+      ].map(([name, glyph, iconBg, iconFg]) => ({ name, glyph, iconBg, iconFg, open: this.openTrip(name) })),
+
+      history: [
+        { when: "DAY 2 — 14:32", tag: "HEAVY RAIN", title: "2 activities changed — RM6 saved",
+          detail: "Outdoor Market → Indoor Food Hall · Viewpoint Walk → Heritage Gallery",
+          hasLink: true, dot: "#DFFF00", glow: "rgba(223,255,0,.8)",
+          border: "rgba(223,255,0,.26)", tagBg: "rgba(255,184,77,.14)", tagColor: "#FFB84D" },
+        { when: "DAY 1 — 18:10", tag: "BUDGET", title: "Budget updated — RM50 reduction",
+          detail: "1 restaurant changed to stay inside Chris's ceiling",
+          hasLink: false, dot: "#00D6C9", glow: "rgba(0,214,201,.7)",
+          border: "rgba(155,168,176,.11)", tagBg: "rgba(110,231,168,.12)", tagColor: "#6EE7A8" },
+        { when: "DAY 1 — 09:02", tag: "CREATED", title: "Plan A generated",
+          detail: "5 stops per day, balanced across 4 travellers at 88% compatibility",
+          hasLink: false, dot: "#5C6B73", glow: "rgba(155,168,176,.4)",
+          border: "rgba(155,168,176,.11)", tagBg: "rgba(155,168,176,.12)", tagColor: "#9BA8B0" }
+      ],
+
+      profileStats: [
+        { value: "12", label: "Trips" },
+        { value: "24", label: "Places" },
+        { value: "5", label: "Countries" }
+      ],
+
+      profileMenu: [
+        ["My Trips", "▤"], ["Saved Places", "◈"], ["Preferences", "◉"], ["Travel Style", "❦"],
+        ["Notifications", "◔"], ["Help", "?"], ["Settings", "⚙"]
+      ].map(([name, glyph]) => ({ name, glyph, open: this.openProfile(name) })),
+
+      notifications: [
+        { glyph: "☂", text: "Rain is approaching. Want me to protect your afternoon?", when: "2 MIN AGO",
+          hasAction: true, action: "RESCUE MY DAY",
+          border: "rgba(255,184,77,.3)", iconBg: "rgba(255,184,77,.14)", iconFg: "#FFB84D" },
+        { glyph: "◫", text: "You're RM74 under today's budget.", when: "26 MIN AGO",
+          hasAction: true, action: "SEE OPTIONS",
+          border: "rgba(110,231,168,.24)", iconBg: "rgba(110,231,168,.13)", iconFg: "#6EE7A8" },
+        { glyph: "◉", text: "You're 5 minutes away from your next stop.", when: "38 MIN AGO",
+          hasAction: false, action: "",
+          border: "rgba(155,168,176,.11)", iconBg: "rgba(103,232,249,.12)", iconFg: "#67E8F9" },
+        { glyph: "◍", text: "Chris hasn't had a top preference included today.", when: "1 H AGO",
+          hasAction: true, action: "REBALANCE",
+          border: "rgba(223,255,0,.24)", iconBg: "rgba(223,255,0,.13)", iconFg: "#DFFF00" },
+        { glyph: "◗", text: "I found a highly-rated dinner 8 minutes away.", when: "2 H AGO",
+          hasAction: true, action: "VIEW CARD",
+          border: "rgba(155,168,176,.11)", iconBg: "rgba(0,214,201,.12)", iconFg: "#00D6C9" }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

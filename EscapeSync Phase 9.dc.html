@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<script src="./app.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #050A0D; color: #F8FAFC; font-family: Manrope, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #DFFF00; text-decoration: none; }
+  a:hover { color: #B9E900; }
+  button { font-family: inherit; }
+  @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  @keyframes pulseglow { 0%,100% { opacity: .5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.15); } }
+  @keyframes blip { 0%,100% { opacity: 1; } 50% { opacity: .25; } }
+  @keyframes risein { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+</style>
+</helmet>
+
+<div style="max-width:100%;overflow-x:hidden;min-height:100vh">
+
+<nav style="position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:16px clamp(20px,4vw,36px);background:rgba(5,10,13,.78);backdrop-filter:blur(18px);border-bottom:1px solid rgba(155,168,176,.12)">
+  <a href="EscapeSync Phase 3.dc.html" style="display:flex;align-items:center;gap:9px;padding:10px 16px;border-radius:100px;background:rgba(16,27,32,.9);border:1px solid rgba(155,168,176,.14);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#9BA8B0;text-decoration:none;white-space:nowrap;order:-1" style-hover="border-color:rgba(0,214,201,.5);color:#67E8F9"><span style="font-size:12px">◀</span>COMMAND CENTER</a>
+  <div style="display:flex;align-items:center;gap:11px">
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="13" stroke="#67E8F9" stroke-opacity=".35" stroke-width="1.5"/>
+      <path d="M5 21c6 0 6-10 11-10s5 10 11 10" stroke="#00D6C9" stroke-width="2.4" stroke-linecap="round"/>
+      <circle cx="16" cy="11" r="4" fill="#DFFF00"/>
+    </svg>
+    <a href="EscapeSync Phase 1.dc.html" data-nav-home="1" style="text-decoration:none;color:inherit;display:inline-flex"><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;letter-spacing:-.3px">Escape<span style="color:#DFFF00">Sync</span></span></a>
+    <span style="margin-left:10px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#9BA8B0">SHARE &amp; DEMO FLOW</span>
+  </div>
+  <button onClick="{{ openShare }}" style="display:flex;align-items:center;gap:10px;padding:12px 22px;border:none;border-radius:100px;background:#DFFF00;color:#050A0D;font-size:11.5px;font-weight:800;letter-spacing:.1em;cursor:pointer;box-shadow:0 14px 36px -12px rgba(223,255,0,.55)" style-hover="background:#B9E900">
+    <span style="font-size:13px">↗</span>SHARE TRIP
+  </button>
+</nav>
+
+<section data-screen-label="Demo flow" style="padding:clamp(30px,4vw,56px) clamp(20px,4vw,36px) 90px;animation:risein .4s ease both">
+  <div style="max-width:1240px;margin:0 auto">
+
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:clamp(28px,4vw,44px)">
+      <div style="max-width:620px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.14em;color:#00D6C9;margin-bottom:14px">PHASE 9 · FINAL ASSEMBLY</div>
+        <h1 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(32px,4.6vw,50px);line-height:1.04;letter-spacing:-.035em;font-weight:700;margin:0 0 12px">The full demo, in order</h1>
+        <p style="font-size:16px;line-height:1.6;color:#9BA8B0;margin:0">Nineteen steps from landing page to a rescued trip. Every step opens the real screen it belongs to.</p>
+      </div>
+      <button onClick="{{ startFlow }}" style="display:flex;align-items:center;gap:12px;padding:20px 32px;border:none;border-radius:100px;background:#DFFF00;color:#050A0D;font-size:13px;font-weight:800;letter-spacing:.11em;cursor:pointer;box-shadow:0 20px 52px -14px rgba(223,255,0,.55)" style-hover="background:#B9E900">
+        <span style="width:26px;height:26px;border-radius:50%;background:rgba(5,10,13,.14);display:flex;align-items:center;justify-content:center;font-size:12px">▶</span>
+        RUN THE DEMO
+      </button>
+    </div>
+
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#DFFF00;margin-bottom:16px">MAIN FLOW · LANDING → RESCUED TRIP</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(230px,100%),1fr));gap:12px;margin-bottom:28px">
+      <sc-for list="{{ mainFlow }}" as="f" hint-placeholder-count="19">
+        <a href="{{ f.href }}" style="display:flex;gap:13px;align-items:flex-start;padding:17px 16px;border-radius:20px;background:#101B20;border:1px solid rgba(155,168,176,.11);color:#F8FAFC;text-decoration:none" style-hover="border-color:rgba(223,255,0,.45);background:#142329">
+          <span style="width:28px;height:28px;flex:none;border-radius:9px;background:{{ f.numBg }};display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:{{ f.numFg }}">{{ f.n }}</span>
+          <span style="flex:1;min-width:0">
+            <span style="display:block;font-size:13.5px;font-weight:600;line-height:1.35;margin-bottom:5px">{{ f.name }}</span>
+            <span style="display:block;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;color:#5C6B73">{{ f.where }}</span>
+          </span>
+        </a>
+      </sc-for>
+    </div>
+
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#67E8F9;margin-bottom:16px">SECONDARY FLOWS</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:14px">
+      <sc-for list="{{ secondary }}" as="s" hint-placeholder-count="5">
+        <div style="padding:22px;border-radius:24px;background:#101B20;border:1px solid rgba(155,168,176,.11)">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+            <span style="width:34px;height:34px;flex:none;border-radius:12px;background:{{ s.iconBg }};display:flex;align-items:center;justify-content:center;font-size:15px;color:{{ s.iconFg }}">{{ s.glyph }}</span>
+            <span style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600">{{ s.title }}</span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px">
+            <sc-for list="{{ s.steps }}" as="st" hint-placeholder-count="4">
+              <span style="padding:6px 11px;border-radius:100px;background:#0B1418;font-size:11.5px;color:#9BA8B0">{{ st }}</span>
+            </sc-for>
+          </div>
+          <a href="{{ s.href }}" style="display:inline-flex;align-items:center;gap:8px;padding:13px 20px;border-radius:100px;background:rgba(103,232,249,.07);border:1px solid rgba(103,232,249,.3);color:#67E8F9;font-size:11px;font-weight:700;letter-spacing:.09em;text-decoration:none" style-hover="border-color:rgba(103,232,249,.7)">OPEN FLOW →</a>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:14px;margin-top:28px">
+      <sc-for list="{{ phases }}" as="p" hint-placeholder-count="8">
+        <a href="{{ p.href }}" style="display:flex;align-items:center;gap:13px;padding:18px;border-radius:20px;background:#0B1418;border:1px solid rgba(155,168,176,.1);color:#F8FAFC;text-decoration:none" style-hover="border-color:rgba(0,214,201,.4)">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:#5C6B73">{{ p.tag }}</span>
+          <span style="flex:1;min-width:0;font-size:13.5px;font-weight:600">{{ p.name }}</span>
+          <span style="color:#5C6B73">›</span>
+        </a>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<sc-if value="{{ shareOpen }}" hint-placeholder-val="{{ true }}">
+<div onClick="{{ closeShare }}" style="position:fixed;inset:0;z-index:90;background:rgba(5,10,13,.86);backdrop-filter:blur(12px);display:flex;align-items:flex-start;justify-content:center;padding:clamp(20px,5vh,64px) 20px;overflow-y:auto">
+  <div onClick="{{ stop }}" style="width:100%;max-width:520px;padding:clamp(26px,3.4vw,36px);border-radius:30px;background:linear-gradient(165deg,#142329,#0B1418);border:1px solid rgba(223,255,0,.24);box-shadow:0 50px 120px -40px rgba(0,0,0,.95);animation:risein .35s ease both">
+
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:26px">
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#DFFF00;margin-bottom:12px">ONE-CLICK GROUP SHARE</div>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(23px,3vw,29px);font-weight:700;letter-spacing:-.025em;margin:0 0 8px">Melaka Escape</h2>
+        <div style="font-size:14px;color:#9BA8B0">3 Days · 4 Travellers · RM600/person</div>
+      </div>
+      <button onClick="{{ closeShare }}" style="width:40px;height:40px;flex:none;border-radius:14px;background:#101B20;border:1px solid rgba(155,168,176,.18);color:#9BA8B0;font-size:16px;cursor:pointer">✕</button>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:16px 18px;border-radius:20px;background:#0B1418;border:1px solid rgba(155,168,176,.16);margin-bottom:14px">
+      <span style="flex:1;min-width:150px;font-family:'JetBrains Mono',monospace;font-size:13.5px;color:#F8FAFC;overflow-wrap:anywhere">escapesync.app/trip/7F92K</span>
+      <button onClick="{{ copy }}" style="padding:12px 20px;border:none;border-radius:100px;background:{{ copyBg }};color:{{ copyFg }};font-size:11px;font-weight:800;letter-spacing:.1em;cursor:pointer;white-space:nowrap" style-hover="background:#B9E900">{{ copyLabel }}</button>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(110px,100%),1fr));gap:10px;margin-bottom:16px">
+      <sc-for list="{{ shareActions }}" as="a" hint-placeholder-count="4">
+        <button onClick="{{ a.select }}" style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 12px;border-radius:20px;background:{{ a.bg }};border:1px solid {{ a.border }};color:#F8FAFC;cursor:pointer" style-hover="border-color:rgba(223,255,0,.45)">
+          <span style="width:38px;height:38px;border-radius:14px;background:{{ a.iconBg }};display:flex;align-items:center;justify-content:center;font-size:16px;color:{{ a.iconFg }}">{{ a.glyph }}</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.09em;color:{{ a.labelColor }}">{{ a.label }}</span>
+        </button>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ showQr }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:center;padding:22px;border-radius:22px;background:#0B1418;border:1px solid rgba(155,168,176,.14);margin-bottom:16px">
+        <div style="width:132px;height:132px;flex:none;padding:12px;border-radius:16px;background:#F8FAFC;display:grid;grid-template-columns:repeat(17,1fr);gap:0">
+          <sc-for list="{{ qr }}" as="q" hint-placeholder-count="289">
+            <span style="width:100%;aspect-ratio:1;background:{{ q.fill }}"></span>
+          </sc-for>
+        </div>
+        <div style="flex:1;min-width:170px">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.12em;color:#9BA8B0;margin-bottom:10px">SCAN TO JOIN</div>
+          <div style="font-size:14px;line-height:1.55;color:#F8FAFC">Point a camera at this code to open the trip. Works without an account.</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ showWhatsapp }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:20px;border-radius:22px;background:#0B1418;border:1px solid rgba(110,231,168,.26);margin-bottom:16px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.12em;color:#6EE7A8;margin-bottom:14px">MESSAGE PREVIEW</div>
+        <div style="padding:15px 17px;border-radius:18px 18px 18px 6px;background:rgba(110,231,168,.09);border:1px solid rgba(110,231,168,.24);font-size:14px;line-height:1.6">Melaka Escape · 3 days, 4 of us, RM600 each. Vote on the stops and add what you want here: escapesync.app/trip/7F92K</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px">
+          <sc-for list="{{ crewNames }}" as="c" hint-placeholder-count="4">
+            <span style="padding:8px 14px;border-radius:100px;background:#101B20;border:1px solid rgba(155,168,176,.14);font-size:12px">{{ c }}</span>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ showEmail }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:20px;border-radius:22px;background:#0B1418;border:1px solid rgba(103,232,249,.26);margin-bottom:16px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.12em;color:#67E8F9;margin-bottom:14px">EMAIL DRAFT</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;gap:12px;font-size:13.5px"><span style="color:#9BA8B0;min-width:52px">To</span><span>alice@, ben@, chris@, david@</span></div>
+          <div style="display:flex;gap:12px;font-size:13.5px"><span style="color:#9BA8B0;min-width:52px">Subject</span><span>Melaka Escape — 12–14 Sep</span></div>
+          <div style="display:flex;gap:12px;font-size:13.5px;line-height:1.6"><span style="color:#9BA8B0;min-width:52px">Body</span><span>Itinerary, budget and map are all on the link. No sign-up needed.</span></div>
+        </div>
+      </div>
+    </sc-if>
+
+    <div style="padding:18px 20px;border-radius:22px;background:rgba(0,214,201,.08);border:1px solid rgba(0,214,201,.26);margin-bottom:14px">
+      <div style="font-size:14.5px;font-weight:600;margin-bottom:12px">No account required to view the trip.</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.12em;color:#9BA8B0;margin-bottom:11px">FRIENDS CAN</div>
+      <div style="display:flex;flex-wrap:wrap;gap:7px">
+        <sc-for list="{{ permissions }}" as="p" hint-placeholder-count="5">
+          <span style="display:flex;align-items:center;gap:7px;padding:7px 12px;border-radius:100px;background:#101B20;border:1px solid rgba(155,168,176,.14);font-size:11.5px"><span style="color:#6EE7A8">✓</span>{{ p }}</span>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:14px;align-items:center">
+      <div style="position:relative;width:52px;height:60px;flex:none;animation:floaty 5s ease-in-out infinite">
+        <div style="position:absolute;left:50%;top:3px;transform:translateX(-50%);width:2px;height:10px;background:#B9E900"></div>
+        <div style="position:absolute;left:50%;top:-3px;transform:translateX(-50%);width:9px;height:9px;border-radius:50%;background:#DFFF00;box-shadow:0 0 12px 3px rgba(223,255,0,.5);animation:pulseglow 2.8s ease-in-out infinite"></div>
+        <div style="position:absolute;left:0;top:11px;width:52px;height:45px;border-radius:18px;background:linear-gradient(165deg,#1B2E36,#0B1418);border:1px solid rgba(103,232,249,.24)"></div>
+        <div style="position:absolute;left:6px;top:19px;width:40px;height:28px;border-radius:14px;background:#050A0D;display:flex;align-items:center;justify-content:center;gap:9px">
+          <span style="width:8px;height:8px;border-radius:50%;background:#67E8F9;box-shadow:0 0 9px 2px rgba(103,232,249,.75)"></span>
+          <span style="width:8px;height:8px;border-radius:50%;background:#67E8F9;box-shadow:0 0 9px 2px rgba(103,232,249,.75)"></span>
+        </div>
+      </div>
+      <div style="flex:1;min-width:0;font-size:13.5px;line-height:1.55;color:#9BA8B0">Anything they add lands in the fairness engine, so late joiners still get represented.</div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:1000}}">
+const P1 = "EscapeSync Phase 1.dc.html";
+const P2 = "EscapeSync Phase 2.dc.html";
+const P3 = "EscapeSync Phase 3.dc.html";
+const P4 = "EscapeSync Phase 4.dc.html";
+const P5 = "EscapeSync Phase 5.dc.html";
+const P6 = "EscapeSync Phase 6.dc.html";
+const P7 = "EscapeSync Phase 7.dc.html";
+const P8 = "EscapeSync Phase 8.dc.html";
+
+const MAIN = [
+  ["Landing page", P1, "", "PHASE 1"],
+  ["Start your escape", P2, "#step-1", "PHASE 2 · STEP 1"],
+  ["Create trip · dates", P2, "#step-2", "PHASE 2 · STEP 2"],
+  ["Add crew · who's coming", P2, "#step-3", "PHASE 2 · STEP 3"],
+  ["Budget per person", P2, "#step-4", "PHASE 2 · STEP 4"],
+  ["Travel style", P2, "#step-5", "PHASE 2 · STEP 5"],
+  ["Group preferences", P2, "#crew", "PHASE 2 · CREW"],
+  ["Group compatibility 88%", P2, "#balance", "PHASE 2 · BALANCE"],
+  ["Trip Command Center", P3, "#command", "PHASE 3"],
+  ["3D Map Explorer", P4, "#web", "PHASE 4 · WEB"],
+  ["Day 2 route", P4, "#stop-3", "PHASE 4 · STOP 3"],
+  ["Disruption detected", P5, "#trigger", "PHASE 5 · TRIGGER"],
+  ["Heavy rain selected", P5, "#rain", "PHASE 5 · TRIGGER"],
+  ["Processing · 6 steps", P5, "#processing", "PHASE 5 · PROCESSING"],
+  ["Plan B ready", P5, "#plan-b", "PHASE 5 · PLAN B"],
+  ["What changed?", P5, "#compare", "PHASE 5 · COMPARE"],
+  ["Compare on 3D map", P4, "#compare", "PHASE 4 · COMPARE"],
+  ["Accept Plan B", P5, "#plan-b", "PHASE 5 · ACCEPT"],
+  ["Updated Command Center", P3, "#updated", "PHASE 3 · UPDATED"]
+];
+
+const SECONDARY = [
+  { title: "Recommendations → Why this?", glyph: "◗", href: P6 + "#options",
+    steps: ["Command Center", "Smart Options", "Nyonya Makko", "Why This?", "Add to Trip"],
+    iconBg: "rgba(0,214,201,.12)", iconFg: "#00D6C9" },
+  { title: "Budget Brain → smart saving", glyph: "◫", href: P6,
+    steps: ["Command Center", "Budget Brain", "Pip insight", "View Smart Options"],
+    iconBg: "rgba(110,231,168,.12)", iconFg: "#6EE7A8" },
+  { title: "Pip → preview → apply", glyph: "◍", href: P7 + "#chat",
+    steps: ["Command Center", "Pip", "Ask question", "Preview change", "Apply change"],
+    iconBg: "rgba(103,232,249,.12)", iconFg: "#67E8F9" },
+  { title: "Trip → share → WhatsApp / QR", glyph: "↗", href: "#share",
+    steps: ["Trip details", "Share trip", "WhatsApp", "QR code"],
+    iconBg: "rgba(223,255,0,.13)", iconFg: "#DFFF00" },
+  { title: "Mobile · alert → rescued", glyph: "▤", href: P8,
+    steps: ["Mobile Home", "Weather alert", "Rescue Mode", "Plan B", "Updated map"],
+    iconBg: "rgba(255,184,77,.14)", iconFg: "#FFB84D" }
+];
+
+const PHASES = [
+  ["P1", "Branding + landing", P1], ["P2", "Trip creation + crew", P2],
+  ["P3", "Command Center", P3], ["P4", "3D Map Explorer", P4],
+  ["P5", "Rescue Mode", P5], ["P6", "Budget + recommendations", P6],
+  ["P7", "Pip assistant + voice", P7], ["P8", "Mobile app", P8]
+];
+
+const QR_SEED = "escapesync.app/trip/7F92K";
+
+class Component extends DCLogic {
+  state = { shareOpen: window.location.hash === "#share", tab: "qr", copied: false };
+
+  componentDidMount() {
+    if (window.location.hash === "#share") this.setState({ shareOpen: true });
+  }
+
+  qrCells() {
+    const N = 17;
+    const cells = [];
+    let h = 0;
+    for (let i = 0; i < QR_SEED.length; i++) h = (h * 31 + QR_SEED.charCodeAt(i)) % 100003;
+    const finder = (r, c) => {
+      const inBox = (br, bc) => r >= br && r < br + 7 && c >= bc && c < bc + 7;
+      const ring = (br, bc) => {
+        const dr = r - br, dc = c - bc;
+        const edge = dr === 0 || dr === 6 || dc === 0 || dc === 6;
+        const core = dr >= 2 && dr <= 4 && dc >= 2 && dc <= 4;
+        return edge || core;
+      };
+      if (inBox(0, 0)) return ring(0, 0);
+      if (inBox(0, N - 7)) return ring(0, N - 7);
+      if (inBox(N - 7, 0)) return ring(N - 7, 0);
+      return null;
+    };
+    for (let r = 0; r < N; r++) {
+      for (let c = 0; c < N; c++) {
+        const f = finder(r, c);
+        let on;
+        if (f !== null) on = f;
+        else if (r === 6 || c === 6) on = (r + c) % 2 === 0;
+        else {
+          h = (h * 1103515245 + 12345) % 2147483648;
+          on = (h >> 16) % 100 < 46;
+        }
+        cells.push({ fill: on ? "#050A0D" : "#F8FAFC" });
+      }
+    }
+    return cells;
+  }
+
+  renderVals() {
+    const s = this.state;
+    const actions = [
+      { id: "copy", glyph: "⧉", label: "COPY LINK" },
+      { id: "whatsapp", glyph: "◉", label: "WHATSAPP" },
+      { id: "qr", glyph: "▦", label: "QR CODE" },
+      { id: "email", glyph: "✉", label: "EMAIL" }
+    ];
+
+    const shareActions = actions.map(a => {
+      const on = a.id === "copy" ? s.copied : s.tab === a.id;
+      return { glyph: a.glyph, label: a.label,
+        select: a.id === "copy" ? this.doCopy : () => this.setState({ tab: a.id }),
+        bg: on ? "linear-gradient(160deg,#142329,#101B20)" : "#101B20",
+        border: on ? "rgba(223,255,0,.45)" : "rgba(155,168,176,.12)",
+        iconBg: on ? "rgba(223,255,0,.14)" : "rgba(103,232,249,.1)",
+        iconFg: on ? "#DFFF00" : "#67E8F9",
+        labelColor: on ? "#DFFF00" : "#9BA8B0" };
+    });
+
+    return {
+      shareOpen: s.shareOpen,
+      openShare: () => this.setState({ shareOpen: true }),
+      closeShare: () => this.setState({ shareOpen: false }),
+      stop: (e) => e.stopPropagation(),
+      copy: this.doCopy,
+      copyLabel: s.copied ? "COPIED ✓" : "COPY LINK",
+      copyBg: s.copied ? "rgba(110,231,168,.18)" : "#DFFF00",
+      copyFg: s.copied ? "#6EE7A8" : "#050A0D",
+      shareActions,
+      showQr: s.tab === "qr", showWhatsapp: s.tab === "whatsapp", showEmail: s.tab === "email",
+      qr: this.qrCells(),
+      crewNames: ["Alice", "Ben", "Chris", "David"],
+      permissions: ["View itinerary", "Vote", "Add preferences", "View map", "See budget"],
+      mainFlow: MAIN.map(([name, file, query, where], i) => ({
+        n: String(i + 1).padStart(2, "0"), name, where,
+        href: file + query,
+        numBg: i === 0 ? "rgba(223,255,0,.16)" : "rgba(103,232,249,.1)",
+        numFg: i === 0 ? "#DFFF00" : "#67E8F9"
+      })),
+      secondary: SECONDARY,
+      phases: PHASES.map(([tag, name, href]) => ({ tag, name, href })),
+      startFlow: () => { window.location.href = P1; }
+    };
+  }
+
+  doCopy = () => {
+    if (window.EscapeSyncApp) EscapeSyncApp.copyText("https://" + QR_SEED);
+    this.setState({ copied: true });
+    setTimeout(() => this.setState({ copied: false }), 2200);
+  };
+}
+</script>
+</body>
+</html>
