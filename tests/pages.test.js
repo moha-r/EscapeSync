@@ -41,6 +41,13 @@ test('landing and builder expose the connected primary flow', () => {
   assert.match(read('EscapeSync Phase 2.dc.html'), /EscapeSyncApp\.navigate\(["']command["']\)/);
 });
 
+test('landing hero exposes the mission-control route layer accessibly', () => {
+  const landing = read('EscapeSync Phase 1.dc.html');
+  assert.match(landing, /data-visual="mission-route"/);
+  assert.match(landing, /data-visual="route-pulse"/);
+  assert.match(landing, /prefers-reduced-motion: reduce/);
+});
+
 test('command center routes every feature to its intended state', () => {
   const html = read('EscapeSync Phase 3.dc.html');
   assert.match(html, /EscapeSync Phase 2\.dc\.html#crew/);

@@ -25,6 +25,14 @@
   @keyframes pulseglow { 0%,100% { opacity: .45; transform: scale(1); } 50% { opacity: 1; transform: scale(1.12); } }
   @keyframes blip { 0%,100% { opacity: 1; } 50% { opacity: .25; } }
   @keyframes sweep { 0% { transform: translateX(-120%); } 100% { transform: translateX(220%); } }
+  @keyframes routepulse { to { stroke-dashoffset: -420; } }
+  @keyframes radar { 0% { opacity: .72; transform: scale(.72); } 100% { opacity: 0; transform: scale(1.9); } }
+  .route-pulse { animation: routepulse 3.6s linear infinite; }
+  .route-radar { transform-origin: center; animation: radar 3.2s ease-out infinite; }
+  .route-scan { animation: sweep 5.5s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) {
+    .route-pulse, .route-radar, .route-scan { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+  }
 </style>
 </helmet>
 
@@ -58,11 +66,15 @@
   <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(5,10,13,.84) 0%,rgba(5,10,13,.76) 18%,rgba(5,10,13,.58) 38%,rgba(5,10,13,.34) 60%,rgba(5,10,13,.12) 82%,rgba(5,10,13,0) 100%)"></div>
   <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,#050A0D 2%,rgba(5,10,13,0) 45%)"></div>
 
-  <svg viewBox="0 0 1440 840" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none">
+  <svg data-visual="mission-route" aria-hidden="true" viewBox="0 0 1440 840" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none">
+    <g stroke="rgba(103,232,249,.07)" stroke-width="1">
+      <path d="M0 150 H1440M0 300 H1440M0 450 H1440M0 600 H1440M0 750 H1440"/>
+      <path d="M160 0 V840M360 0 V840M560 0 V840M760 0 V840M960 0 V840M1160 0 V840M1360 0 V840"/>
+    </g>
     <path d="M-40 640 C 260 640 380 430 620 430 S 980 300 1180 190 1420 150 1520 120" stroke="#00D6C9" stroke-opacity=".18" stroke-width="2" fill="none"/>
-    <path d="M-40 640 C 260 640 380 430 620 430 S 980 300 1180 190 1420 150 1520 120" stroke="#67E8F9" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-dasharray="120 1080" style="filter:drop-shadow(0 0 8px rgba(103,232,249,.8));animation:dashflow 6s linear infinite"/>
+    <path data-visual="route-pulse" class="route-pulse" d="M-40 640 C 260 640 380 430 620 430 S 980 300 1180 190 1420 150 1520 120" stroke="#67E8F9" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-dasharray="120 1080" style="filter:drop-shadow(0 0 8px rgba(103,232,249,.8))"/>
     <circle cx="620" cy="430" r="6" fill="#DFFF00" style="animation:blip 2.4s ease-in-out infinite"/>
-    <circle cx="620" cy="430" r="16" fill="none" stroke="#DFFF00" stroke-opacity=".4" style="animation:pulseglow 2.4s ease-in-out infinite"/>
+    <circle cx="620" cy="430" r="16" fill="none" stroke="#DFFF00" stroke-opacity=".4" class="route-radar"/>
   </svg>
 
   <div style="position:relative;z-index:2;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr));gap:clamp(36px,5vw,60px);align-items:center;width:100%;max-width:1400px;margin:0 auto;padding:clamp(56px,7vw,80px) clamp(20px,4vw,40px) clamp(64px,8vw,100px)">
@@ -100,13 +112,14 @@
           <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#9BA8B0">3D ROUTE PREVIEW</span>
           <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#00D6C9">LIVE</span>
         </div>
-        <div style="position:relative;height:150px;border-radius:16px;overflow:hidden;background:linear-gradient(160deg,#0B1418,#142329)">
+        <div data-visual="route-console" style="position:relative;height:150px;border-radius:16px;overflow:hidden;background:linear-gradient(160deg,#0B1418,#142329)">
+          <div class="route-scan" aria-hidden="true" style="position:absolute;top:0;bottom:0;width:26%;background:linear-gradient(90deg,transparent,rgba(103,232,249,.11),transparent);transform:translateX(-120%)"></div>
           <svg viewBox="0 0 360 150" style="position:absolute;inset:0;width:100%;height:100%">
             <g stroke="rgba(103,232,249,.10)" stroke-width="1">
               <path d="M0 118 L360 88"/><path d="M0 96 L360 66"/><path d="M0 74 L360 44"/><path d="M60 150 L60 0"/><path d="M150 150 L150 0"/><path d="M240 150 L240 0"/><path d="M330 150 L330 0"/>
             </g>
             <path d="M40 116 C 110 116 130 70 200 62 S 300 46 330 34" stroke="#00D6C9" stroke-width="2.5" fill="none" stroke-linecap="round" style="filter:drop-shadow(0 0 6px rgba(0,214,201,.9))"/>
-            <path d="M40 116 C 110 116 130 70 200 62 S 300 46 330 34" stroke="#DFFF00" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-dasharray="30 320" style="animation:dashflow 4s linear infinite"/>
+            <path class="route-pulse" d="M40 116 C 110 116 130 70 200 62 S 300 46 330 34" stroke="#DFFF00" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-dasharray="30 320"/>
             <circle cx="40" cy="116" r="5" fill="#F8FAFC"/>
             <circle cx="200" cy="62" r="4" fill="#DFFF00"/>
             <circle cx="330" cy="34" r="5" fill="#00D6C9"/>
