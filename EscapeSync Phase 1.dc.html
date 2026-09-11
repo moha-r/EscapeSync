@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="EscapeSync plans group trips and rebuilds them when reality changes.">
+<title>EscapeSync — Your trip, ready for anything</title>
+<link rel="icon" href="data:,">
 <script src="./support.js"></script>
 <script src="./app.js"></script>
 </head>
@@ -12,354 +15,61 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="./image-slot.js"></script>
+<link rel="preconnect" href="https://images.unsplash.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; }
-  body { margin: 0; background: #050A0D; color: #F8FAFC; font-family: Manrope, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
-  a { color: #DFFF00; text-decoration: none; }
-  a:hover { color: #B9E900; }
-  @keyframes dashflow { to { stroke-dashoffset: -1200; } }
-  @keyframes planepath { 0% { offset-distance: 0%; } 100% { offset-distance: 100%; } }
-  @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-  @keyframes pulseglow { 0%,100% { opacity: .45; transform: scale(1); } 50% { opacity: 1; transform: scale(1.12); } }
-  @keyframes blip { 0%,100% { opacity: 1; } 50% { opacity: .25; } }
-  @keyframes sweep { 0% { transform: translateX(-120%); } 100% { transform: translateX(220%); } }
-  @keyframes routepulse { to { stroke-dashoffset: -420; } }
-  @keyframes radar { 0% { opacity: .72; transform: scale(.72); } 100% { opacity: 0; transform: scale(1.9); } }
-  .route-pulse { animation: routepulse 3.6s linear infinite; }
-  .route-radar { transform-origin: center; animation: radar 3.2s ease-out infinite; }
-  .route-scan { animation: sweep 5.5s ease-in-out infinite; }
-  @media (prefers-reduced-motion: reduce) {
-    .route-pulse, .route-radar, .route-scan { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
-  }
+  @font-face{font-family:"Ogg Medium";src:url("https://dcym8fthxf5uu.cloudfront.net/fonts/247a073c-29f5-4a89-aa3a-741020f346fc/OggText-Medium.woff2") format("woff2");font-display:swap}
+  :root{--ink:#050a0d;--night:#071115;--panel:#0d191d;--paper:#f5f0e8;--muted:#a8b3b8;--line:rgba(245,240,232,.18);--lime:#dfff00;--teal:#00d6c9;--cyan:#67e8f9;--warning:#ffb84d;--success:#6ee7a8;--serif:"Ogg Medium",Georgia,serif;--sans:Manrope,system-ui,sans-serif;--mono:"JetBrains Mono",monospace}
+  *{box-sizing:border-box}html{scroll-behavior:smooth;background:var(--ink)}body{margin:0;overflow-x:clip;background:var(--ink);color:var(--paper);font-family:var(--sans);-webkit-font-smoothing:antialiased}button,a{font:inherit}button{border:0}a{color:inherit;text-decoration:none}img{display:block;max-width:100%}
+  .skip-link{position:fixed;z-index:100;top:12px;left:12px;transform:translateY(-160%);padding:12px 16px;background:var(--lime);color:var(--ink);font-weight:800;border-radius:999px}.skip-link:focus{transform:none}:focus-visible{outline:2px solid var(--lime);outline-offset:4px}.shell{min-height:100vh;background:var(--ink)}
+  .site-header{position:absolute;z-index:20;top:0;left:0;right:0;display:grid;grid-template-columns:minmax(220px,1fr) auto minmax(220px,1fr);align-items:center;gap:28px;padding:26px clamp(20px,4vw,64px);border-bottom:1px solid rgba(255,255,255,.12);background:linear-gradient(180deg,rgba(5,10,13,.72),transparent)}
+  .brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:-.03em;cursor:pointer}.brand-mark{width:31px;height:31px}.brand em{color:var(--lime);font-style:normal}.main-nav{display:flex;align-items:center;justify-content:center;gap:clamp(18px,2vw,36px);font-size:13px;font-weight:600}.main-nav a,.main-nav button{padding:10px 0;background:none;color:rgba(245,240,232,.8);cursor:pointer}.header-actions{justify-self:end;display:flex;align-items:center;gap:16px}.text-action{background:none;color:rgba(245,240,232,.75);font-size:12px;font-weight:700;letter-spacing:.09em;cursor:pointer}
+  .pill-action{min-height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0 22px;border-radius:999px;background:var(--lime);color:var(--ink);font-size:12px;font-weight:800;letter-spacing:.08em;cursor:pointer;transition:transform .25s ease,box-shadow .25s ease}.pill-action:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(223,255,0,.2)}
+  .cinematic-hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;isolation:isolate;overflow:hidden;background:#102026}.hero-photo{position:absolute;z-index:-4;inset:-3%;width:106%;height:106%;object-fit:cover;object-position:center 48%;filter:saturate(.82) contrast(1.06);animation:hero-breathe 18s ease-in-out infinite alternate}.hero-wash{position:absolute;z-index:-3;inset:0;background:linear-gradient(180deg,rgba(5,10,13,.18) 0%,rgba(5,10,13,.06) 32%,rgba(5,10,13,.7) 76%,#050a0d 100%),linear-gradient(90deg,rgba(5,10,13,.5),transparent 45%,rgba(5,10,13,.18))}.hero-grid{position:absolute;z-index:-2;inset:0;opacity:.18;background-image:linear-gradient(rgba(103,232,249,.16) 1px,transparent 1px),linear-gradient(90deg,rgba(103,232,249,.16) 1px,transparent 1px);background-size:96px 96px;mask-image:linear-gradient(180deg,transparent 28%,black 100%)}
+  .hero-route{position:absolute;z-index:-1;inset:0;width:100%;height:100%;pointer-events:none}.hero-route .signal{stroke-dasharray:120 900;animation:route-flow 5s linear infinite;filter:drop-shadow(0 0 7px rgba(103,232,249,.8))}.hero-title{position:absolute;z-index:1;top:clamp(130px,19vh,220px);left:50%;width:min(94vw,1700px);transform:translateX(-50%);margin:0;text-align:center;font-family:var(--serif);font-size:clamp(7rem,18vw,17rem);font-weight:500;line-height:.68;letter-spacing:-.07em;color:var(--paper);text-shadow:0 18px 60px rgba(0,0,0,.28)}.hero-title span{display:block;margin-top:.18em;color:transparent;-webkit-text-stroke:1px rgba(245,240,232,.82);font-style:italic}
+  .hero-content{position:relative;z-index:4;width:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,440px);align-items:end;gap:48px;padding:0 clamp(20px,5vw,72px) clamp(36px,6vh,68px)}.hero-copy{max-width:590px}.eyebrow{display:flex;align-items:center;gap:10px;margin:0 0 18px;font:500 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--cyan)}.eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 12px currentColor;animation:blink 1.8s ease-in-out infinite}.hero-copy h2{max-width:560px;margin:0;font-size:clamp(1.45rem,2.4vw,2.2rem);line-height:1.1;letter-spacing:-.045em;text-wrap:balance}.hero-copy p{max-width:520px;margin:16px 0 26px;color:#c3cccf;font-size:15px;line-height:1.65}.hero-buttons{display:flex;flex-wrap:wrap;gap:12px}.outline-action{min-height:48px;display:inline-flex;align-items:center;justify-content:center;gap:11px;padding:0 22px;border:1px solid rgba(245,240,232,.32);border-radius:999px;background:rgba(5,10,13,.3);backdrop-filter:blur(14px);color:var(--paper);font-size:12px;font-weight:800;letter-spacing:.08em;cursor:pointer}
+  .trip-console{padding:18px;border:1px solid rgba(245,240,232,.2);background:rgba(5,10,13,.48);backdrop-filter:blur(20px);border-radius:18px;box-shadow:0 28px 70px rgba(0,0,0,.28)}.console-top,.console-bottom{display:flex;align-items:center;justify-content:space-between;gap:14px;font:500 10px/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase}.console-top{padding-bottom:14px;border-bottom:1px solid var(--line);color:var(--muted)}.live{color:var(--teal)}.route-line{position:relative;height:64px;margin:8px 0}.route-line svg{width:100%;height:100%}.route-line path:last-child{stroke-dasharray:26 250;animation:route-flow 3s linear infinite}.console-bottom{color:var(--paper)}.console-bottom strong{color:var(--lime);font-size:12px}.scroll-cue{position:absolute;z-index:4;right:clamp(20px,5vw,72px);bottom:50%;display:flex;align-items:center;gap:12px;writing-mode:vertical-rl;font:500 9px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:rgba(245,240,232,.65)}.scroll-cue::after{content:"";width:1px;height:64px;background:linear-gradient(var(--paper),transparent)}
+  .story{background:#050a0d}.story-chapter{position:relative;min-height:108svh;display:flex;align-items:center;overflow:hidden;isolation:isolate}.story-photo{position:absolute;z-index:-3;inset:0;width:100%;height:100%;object-fit:cover}.story-overlay{position:absolute;z-index:-2;inset:0;background:linear-gradient(90deg,rgba(5,10,13,.93) 0%,rgba(5,10,13,.68) 42%,rgba(5,10,13,.2) 78%),linear-gradient(180deg,#050a0d 0%,transparent 22%,transparent 72%,#050a0d 100%)}.story-no{position:absolute;z-index:-1;right:3vw;bottom:-.18em;font-family:var(--serif);font-size:clamp(15rem,40vw,42rem);line-height:1;color:rgba(245,240,232,.07)}.story-content{width:min(660px,calc(100% - 40px));margin-left:clamp(20px,10vw,150px)}.chapter-label{font:500 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--warning)}.story-content h2{margin:20px 0 22px;font-family:var(--serif);font-size:clamp(3.5rem,7.5vw,7.6rem);font-weight:500;line-height:.84;letter-spacing:-.055em;text-wrap:balance}.story-content p{max-width:520px;margin:0;color:#c4ced1;font-size:clamp(1rem,1.5vw,1.18rem);line-height:1.65}
+  .weather-alert{width:min(520px,100%);display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;margin-top:34px;padding:16px 18px;border-top:1px solid rgba(255,184,77,.5);border-bottom:1px solid rgba(255,184,77,.25);background:rgba(5,10,13,.56);backdrop-filter:blur(14px)}.weather-icon{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;border:1px solid rgba(255,184,77,.45);color:var(--warning)}.weather-alert strong{display:block;font-size:13px}.weather-alert small{color:var(--muted)}.weather-alert b{font:600 11px/1 var(--mono);color:var(--warning)}.plan-b .story-overlay{background:linear-gradient(90deg,rgba(5,10,13,.95) 0%,rgba(5,10,13,.6) 50%,rgba(5,10,13,.16) 80%),linear-gradient(180deg,#050a0d 0%,transparent 20%,transparent 72%,#050a0d 100%)}.plan-b .chapter-label{color:var(--lime)}.rescue-chip{display:inline-flex;align-items:center;gap:9px;margin-top:30px;padding:11px 15px;border:1px solid rgba(110,231,168,.38);border-radius:999px;background:rgba(110,231,168,.1);font:600 10px/1 var(--mono);letter-spacing:.1em;color:var(--success)}
+  .destination-section{padding:120px 0 130px;background:var(--paper);color:var(--ink);overflow:hidden}.section-head{display:flex;align-items:end;justify-content:space-between;gap:30px;padding:0 clamp(20px,5vw,72px);margin-bottom:50px}.section-kicker{margin:0 0 14px;font:600 10px/1 var(--mono);letter-spacing:.15em;text-transform:uppercase;color:#4a5d62}.section-head h2,.rescue-heading h2,.system-heading h2{margin:0;font-family:var(--serif);font-size:clamp(3.2rem,7vw,7.2rem);font-weight:500;line-height:.86;letter-spacing:-.055em}.rail-controls{display:flex;gap:10px}.rail-arrow{width:54px;height:54px;display:grid;place-items:center;border:1px solid rgba(5,10,13,.24);border-radius:50%;font-size:20px;transition:background .2s ease,color .2s ease}.rail-arrow:hover{background:var(--ink);color:var(--paper)}.destination-rail{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:0 clamp(20px,5vw,72px) 20px}.destination-rail::-webkit-scrollbar{display:none}.destination-card{position:relative;flex:0 0 clamp(300px,31vw,470px);height:clamp(440px,58vw,610px);scroll-snap-align:start;overflow:hidden;background:#203236;color:var(--paper)}.destination-card img{width:100%;height:100%;object-fit:cover;transition:transform .75s cubic-bezier(.2,.8,.2,1)}.destination-card:hover img{transform:scale(1.045)}.destination-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 42%,rgba(5,10,13,.88) 100%)}.destination-meta{position:absolute;z-index:2;left:26px;right:26px;bottom:24px}.destination-meta small{font:500 9px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--cyan)}.destination-meta h3{margin:10px 0 6px;font-family:var(--serif);font-size:clamp(2.6rem,4vw,4rem);font-weight:500;line-height:.9}.destination-meta p{margin:0;color:#ccd4d6;font-size:13px}
+  .rescue-section{padding:130px clamp(20px,5vw,72px);background:#071115;color:var(--paper)}.rescue-heading{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,.7fr);align-items:end;gap:50px;margin-bottom:70px}.rescue-heading p{max-width:470px;margin:0 0 8px;color:var(--muted);line-height:1.7}.comparison{display:grid;grid-template-columns:1fr 90px 1fr;align-items:stretch;max-width:1320px;margin:0 auto}.plan-panel{position:relative;min-height:520px;overflow:hidden;border:1px solid var(--line);background:var(--panel)}.plan-panel img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.42;filter:saturate(.7)}.plan-panel::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,10,13,.08),rgba(5,10,13,.92))}.plan-content{position:absolute;z-index:2;left:30px;right:30px;bottom:30px}.plan-state{font:600 10px/1 var(--mono);letter-spacing:.13em;color:var(--warning)}.new-plan .plan-state{color:var(--success)}.plan-content h3{margin:14px 0 20px;font-family:var(--serif);font-size:clamp(2.5rem,4vw,4rem);font-weight:500;line-height:.9}.plan-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line)}.plan-stats div{padding:15px 10px;background:rgba(5,10,13,.7)}.plan-stats small{display:block;margin-bottom:6px;color:var(--muted);font:500 8px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase}.plan-stats strong{font-size:13px}.comparison-arrow{display:grid;place-items:center;color:var(--lime);font-size:28px}.comparison-action{display:flex;justify-content:center;margin-top:34px}
+  .system-section{padding:130px clamp(20px,5vw,72px);background:var(--paper);color:var(--ink)}.system-heading{max-width:1000px;margin-bottom:70px}.system-list{border-top:1px solid rgba(5,10,13,.18)}.system-item{display:grid;grid-template-columns:80px minmax(220px,.8fr) 1.2fr auto;align-items:center;gap:30px;padding:28px 0;border-bottom:1px solid rgba(5,10,13,.18)}.system-index{font:500 10px/1 var(--mono);color:#607075}.system-item h3{margin:0;font-size:clamp(1.35rem,2vw,2rem);letter-spacing:-.04em}.system-item p{max-width:560px;margin:0;color:#536166;line-height:1.55}.system-status{padding:8px 11px;border-radius:999px;background:#dbe4df;font:600 9px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase}
+  .final-cta{position:relative;min-height:88svh;display:grid;place-items:center;text-align:center;overflow:hidden;isolation:isolate;background:#152a2f}.final-cta img{position:absolute;z-index:-2;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.78)}.final-cta::after{content:"";position:absolute;z-index:-1;inset:0;background:rgba(5,10,13,.55);box-shadow:inset 0 0 180px rgba(5,10,13,.72)}.final-content{width:min(920px,calc(100% - 40px))}.final-content h2{margin:0 0 22px;font-family:var(--serif);font-size:clamp(4.3rem,10vw,10rem);font-weight:500;line-height:.78;letter-spacing:-.065em}.final-content p{max-width:530px;margin:0 auto 30px;color:#d5dcde;line-height:1.65}.site-footer{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:28px clamp(20px,5vw,72px);background:#050a0d;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}.footer-line{font:500 9px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase}
+  @keyframes hero-breathe{to{transform:scale(1.035) translate3d(-.5%,.5%,0)}}@keyframes route-flow{to{stroke-dashoffset:-1020}}@keyframes blink{50%{opacity:.25}}
+  @media(max-width:1024px){.site-header{grid-template-columns:1fr auto}.main-nav{display:none}.hero-title{top:17vh;font-size:clamp(7rem,22vw,13rem)}.hero-content{grid-template-columns:1fr;gap:24px}.trip-console{max-width:520px}.scroll-cue{display:none}.rescue-heading{grid-template-columns:1fr}.comparison{grid-template-columns:1fr}.comparison-arrow{height:76px;transform:rotate(90deg)}.system-item{grid-template-columns:50px minmax(200px,.7fr) 1fr}.system-status{display:none}}
+  @media(max-width:640px){.site-header{padding:18px 20px}.brand span{font-size:15px}.text-action{display:none}.pill-action{padding:0 16px}.cinematic-hero{min-height:900px}.hero-photo{object-position:58% center}.hero-title{top:145px;font-size:clamp(5rem,25vw,8rem);line-height:.73}.hero-content{padding:0 20px 34px}.hero-copy h2{font-size:1.55rem}.hero-copy p{font-size:14px}.trip-console{padding:15px}.story-chapter{min-height:860px}.story-overlay{background:linear-gradient(180deg,rgba(5,10,13,.16),rgba(5,10,13,.92) 66%,#050a0d)}.story-content{align-self:flex-end;margin:0 auto 80px}.story-content h2{font-size:4rem}.weather-alert{grid-template-columns:auto 1fr}.weather-alert b{display:none}.destination-section,.rescue-section,.system-section{padding-top:88px;padding-bottom:96px}.section-head{align-items:flex-start}.section-head h2{font-size:3.8rem}.rail-controls{display:none}.destination-card{flex-basis:82vw;height:480px}.rescue-heading h2,.system-heading h2{font-size:3.9rem}.plan-panel{min-height:460px}.system-item{grid-template-columns:38px 1fr;gap:14px}.system-item p{grid-column:2}.final-content h2{font-size:5rem}.site-footer{align-items:flex-start;flex-direction:column}}
+  @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}.hero-photo,.hero-route .signal,.route-line path:last-child,.eyebrow::before{animation:none!important}.destination-card img,.pill-action{transition:none!important}}
 </style>
 </helmet>
 
-<div style="max-width:100%;overflow-x:hidden">
-
-<nav style="position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:16px clamp(20px,4vw,40px);background:rgba(5,10,13,.72);backdrop-filter:blur(18px);border-bottom:1px solid rgba(155,168,176,.12)">
-  <div data-action="home" class="es-action" role="link" tabindex="0" style="display:flex;align-items:center;gap:12px">
-    <svg width="30" height="30" viewBox="0 0 32 32" fill="none" aria-label="EscapeSync mark">
-      <circle cx="16" cy="16" r="13" stroke="#67E8F9" stroke-opacity=".35" stroke-width="1.5"/>
-      <path d="M5 21c6 0 6-10 11-10s5 10 11 10" stroke="#00D6C9" stroke-width="2.4" stroke-linecap="round"/>
-      <circle cx="16" cy="11" r="4" fill="#DFFF00"/>
-    </svg>
-    <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:19px;letter-spacing:-.3px">Escape<span style="color:#DFFF00">Sync</span></span>
-  </div>
-  <div style="display:flex;align-items:center;gap:32px;font-size:14px;font-weight:500;color:#9BA8B0">
-    <span data-action="product" class="es-action" style="color:#F8FAFC">Product</span>
-    <span data-action="rescue" class="es-action">Rescue Mode</span>
-    <span data-action="pricing" class="es-action">Pricing</span>
-    <span data-action="about" class="es-action">About</span>
-  </div>
-  <div style="display:flex;align-items:center;gap:16px">
-    <span data-action="sign-in" class="es-action" role="button" tabindex="0" style="font-size:13px;font-weight:600;color:#9BA8B0;letter-spacing:.08em">SIGN IN</span>
-    <span data-action="start-trip" class="es-action" role="button" tabindex="0" style="padding:10px 20px;border-radius:100px;background:#DFFF00;color:#050A0D;font-size:12px;font-weight:700;letter-spacing:.1em">GET STARTED</span>
-  </div>
-</nav>
-
-<section data-screen-label="Hero" style="position:relative;min-height:min(840px,max(640px,86vh));display:flex;align-items:center;overflow:hidden">
-  <div style="position:absolute;inset:0">
-    <div role="img" aria-label="Abstract route across a night-time travel landscape" style="width:100%;height:100%;background:radial-gradient(circle at 80% 22%,rgba(0,214,201,.24),transparent 24%),radial-gradient(circle at 60% 55%,rgba(223,255,0,.09),transparent 28%),linear-gradient(135deg,#071216 0%,#0B1E24 52%,#050A0D 100%)"></div>
-  </div>
-  <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(5,10,13,.84) 0%,rgba(5,10,13,.76) 18%,rgba(5,10,13,.58) 38%,rgba(5,10,13,.34) 60%,rgba(5,10,13,.12) 82%,rgba(5,10,13,0) 100%)"></div>
-  <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,#050A0D 2%,rgba(5,10,13,0) 45%)"></div>
-
-  <svg data-visual="mission-route" aria-hidden="true" viewBox="0 0 1440 840" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none">
-    <g stroke="rgba(103,232,249,.07)" stroke-width="1">
-      <path d="M0 150 H1440M0 300 H1440M0 450 H1440M0 600 H1440M0 750 H1440"/>
-      <path d="M160 0 V840M360 0 V840M560 0 V840M760 0 V840M960 0 V840M1160 0 V840M1360 0 V840"/>
-    </g>
-    <path d="M-40 640 C 260 640 380 430 620 430 S 980 300 1180 190 1420 150 1520 120" stroke="#00D6C9" stroke-opacity=".18" stroke-width="2" fill="none"/>
-    <path data-visual="route-pulse" class="route-pulse" d="M-40 640 C 260 640 380 430 620 430 S 980 300 1180 190 1420 150 1520 120" stroke="#67E8F9" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-dasharray="120 1080" style="filter:drop-shadow(0 0 8px rgba(103,232,249,.8))"/>
-    <circle cx="620" cy="430" r="6" fill="#DFFF00" style="animation:blip 2.4s ease-in-out infinite"/>
-    <circle cx="620" cy="430" r="16" fill="none" stroke="#DFFF00" stroke-opacity=".4" class="route-radar"/>
-  </svg>
-
-  <div style="position:relative;z-index:2;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr));gap:clamp(36px,5vw,60px);align-items:center;width:100%;max-width:1400px;margin:0 auto;padding:clamp(56px,7vw,80px) clamp(20px,4vw,40px) clamp(64px,8vw,100px)">
-    <div style="min-width:0">
-      <div style="display:inline-flex;align-items:center;gap:10px;padding:7px 14px;border-radius:100px;border:1px solid rgba(0,214,201,.35);background:rgba(0,214,201,.08);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;color:#67E8F9;margin-bottom:28px">
-        <span style="width:6px;height:6px;border-radius:50%;background:#00D6C9;display:inline-block;animation:blip 1.6s ease-in-out infinite"></span>
-        GROUP TRAVEL RESILIENCE PLATFORM
-      </div>
-      <h1 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(40px,7vw,76px);line-height:1.02;letter-spacing:-.035em;font-weight:700;margin:0 0 24px;text-wrap:balance">Your Trip.<br>Ready for <span style="color:#DFFF00">Anything.</span></h1>
-      <p style="font-size:19px;line-height:1.6;color:#9BA8B0;max-width:520px;margin:0 0 40px;text-wrap:pretty">EscapeSync plans around your group, your budget and your preferences — then adapts when reality changes.</p>
-      <div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:44px">
-        <button data-action="start-trip" style="position:relative;overflow:hidden;padding:18px 34px;border:none;border-radius:100px;background:#DFFF00;color:#050A0D;font-family:Manrope,sans-serif;font-size:13px;font-weight:800;letter-spacing:.12em;cursor:pointer;box-shadow:0 0 0 1px rgba(223,255,0,.5),0 18px 50px -12px rgba(223,255,0,.55)" style-hover="background:#B9E900">START YOUR ESCAPE</button>
-        <button data-action="watch" style="display:flex;align-items:center;gap:10px;padding:18px 30px;border-radius:100px;border:1px solid rgba(248,250,252,.22);background:rgba(248,250,252,.04);color:#F8FAFC;font-family:Manrope,sans-serif;font-size:13px;font-weight:700;letter-spacing:.12em;cursor:pointer" style-hover="border-color:rgba(248,250,252,.5)">
-          <span style="width:18px;height:18px;border-radius:50%;border:1px solid rgba(248,250,252,.5);display:inline-flex;align-items:center;justify-content:center;font-size:8px">▶</span>
-          WATCH HOW IT WORKS
-        </button>
-      </div>
-      <div style="display:flex;align-items:center;gap:18px">
-        <div style="display:flex">
-          <div style="width:40px;height:40px;border-radius:50%;border:2px solid #050A0D;overflow:hidden;margin-right:-12px"><image-slot id="crew-alice" shape="circle" placeholder="Alice"></image-slot></div>
-          <div style="width:40px;height:40px;border-radius:50%;border:2px solid #050A0D;overflow:hidden;margin-right:-12px"><image-slot id="crew-ben" shape="circle" placeholder="Ben"></image-slot></div>
-          <div style="width:40px;height:40px;border-radius:50%;border:2px solid #050A0D;overflow:hidden;margin-right:-12px"><image-slot id="crew-chris" shape="circle" placeholder="Chris"></image-slot></div>
-          <div style="width:40px;height:40px;border-radius:50%;border:2px solid #050A0D;overflow:hidden"><image-slot id="crew-david" shape="circle" placeholder="David"></image-slot></div>
-        </div>
-        <div style="font-size:13px;line-height:1.5;color:#9BA8B0">
-          <div style="color:#F8FAFC;font-weight:600">Alice, Ben, Chris & David</div>
-          <div>Group compatibility <span style="color:#00D6C9;font-weight:600">88%</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div style="position:relative;display:flex;flex-direction:column;gap:18px;align-items:flex-end;min-width:0">
-      <div style="width:100%;max-width:400px;padding:22px;border-radius:24px;background:rgba(16,27,32,.82);border:1px solid rgba(155,168,176,.14);backdrop-filter:blur(20px);box-shadow:0 30px 70px -30px rgba(0,0,0,.9)">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#9BA8B0">3D ROUTE PREVIEW</span>
-          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#00D6C9">LIVE</span>
-        </div>
-        <div data-visual="route-console" style="position:relative;height:150px;border-radius:16px;overflow:hidden;background:linear-gradient(160deg,#0B1418,#142329)">
-          <div class="route-scan" aria-hidden="true" style="position:absolute;top:0;bottom:0;width:26%;background:linear-gradient(90deg,transparent,rgba(103,232,249,.11),transparent);transform:translateX(-120%)"></div>
-          <svg viewBox="0 0 360 150" style="position:absolute;inset:0;width:100%;height:100%">
-            <g stroke="rgba(103,232,249,.10)" stroke-width="1">
-              <path d="M0 118 L360 88"/><path d="M0 96 L360 66"/><path d="M0 74 L360 44"/><path d="M60 150 L60 0"/><path d="M150 150 L150 0"/><path d="M240 150 L240 0"/><path d="M330 150 L330 0"/>
-            </g>
-            <path d="M40 116 C 110 116 130 70 200 62 S 300 46 330 34" stroke="#00D6C9" stroke-width="2.5" fill="none" stroke-linecap="round" style="filter:drop-shadow(0 0 6px rgba(0,214,201,.9))"/>
-            <path class="route-pulse" d="M40 116 C 110 116 130 70 200 62 S 300 46 330 34" stroke="#DFFF00" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-dasharray="30 320"/>
-            <circle cx="40" cy="116" r="5" fill="#F8FAFC"/>
-            <circle cx="200" cy="62" r="4" fill="#DFFF00"/>
-            <circle cx="330" cy="34" r="5" fill="#00D6C9"/>
-          </svg>
-          <div style="position:absolute;left:14px;bottom:10px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0">KUALA LUMPUR</div>
-          <div style="position:absolute;right:14px;top:10px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#67E8F9">MELAKA</div>
-        </div>
-        <div style="display:flex;justify-content:space-between;margin-top:16px;font-size:12px;color:#9BA8B0">
-          <span>3 Days</span><span>4 Travellers</span><span style="color:#F8FAFC;font-weight:600">RM600 / person</span>
-        </div>
-      </div>
-
-      <div style="width:100%;max-width:400px;display:flex;gap:18px;align-items:center;padding:20px 22px;border-radius:24px;background:rgba(20,35,41,.85);border:1px solid rgba(110,231,168,.22);backdrop-filter:blur(20px)">
-        <div style="position:relative;width:64px;height:64px;flex:none">
-          <svg viewBox="0 0 64 64" style="width:64px;height:64px;transform:rotate(-90deg)">
-            <circle cx="32" cy="32" r="27" fill="none" stroke="rgba(155,168,176,.18)" stroke-width="5"/>
-            <circle cx="32" cy="32" r="27" fill="none" stroke="#6EE7A8" stroke-width="5" stroke-linecap="round" stroke-dasharray="148 170"/>
-          </svg>
-          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700">87</div>
-        </div>
-        <div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#9BA8B0;margin-bottom:5px">TRIP HEALTH SCORE</div>
-          <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:600">87/100 <span style="color:#6EE7A8">GOOD</span></div>
-        </div>
-      </div>
-
-      <div style="width:100%;max-width:400px;display:flex;gap:16px;align-items:center;padding:18px 20px;border-radius:22px;background:rgba(16,27,32,.9);border:1px solid rgba(255,184,77,.28);backdrop-filter:blur(20px);box-shadow:0 0 40px -18px rgba(255,184,77,.5)">
-        <div style="width:38px;height:38px;flex:none;border-radius:12px;background:rgba(255,184,77,.14);display:flex;align-items:center;justify-content:center;color:#FFB84D;font-size:17px">☂</div>
-        <div style="flex:1">
-          <div style="font-size:14px;font-weight:600;margin-bottom:2px">Rain expected in 35 min</div>
-          <div style="font-size:12px;color:#9BA8B0">Jonker Street walk at risk</div>
-        </div>
-        <span data-action="plan-b" class="es-action" role="button" tabindex="0" style="padding:9px 14px;border-radius:100px;background:#DFFF00;color:#050A0D;font-size:11px;font-weight:800;letter-spacing:.06em;white-space:nowrap">See Plan B</span>
-      </div>
-
-      <div style="display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:flex-end;gap:14px;margin-top:6px;width:100%;max-width:400px;animation:floaty 5s ease-in-out infinite">
-        <div style="max-width:230px;padding:14px 16px;border-radius:18px 18px 4px 18px;background:rgba(0,214,201,.10);border:1px solid rgba(0,214,201,.3);font-size:13px;line-height:1.5;color:#F8FAFC">I found an indoor backup 6 min away. Want me to reroute the crew?</div>
-        <div style="position:relative;width:78px;height:88px;flex:none">
-          <div style="position:absolute;left:50%;top:0;transform:translateX(-50%);width:2px;height:14px;background:#B9E900"></div>
-          <div style="position:absolute;left:50%;top:-6px;transform:translateX(-50%);width:9px;height:9px;border-radius:50%;background:#DFFF00;box-shadow:0 0 14px 3px rgba(223,255,0,.6)"></div>
-          <div style="position:absolute;left:0;top:12px;width:78px;height:66px;border-radius:26px;background:linear-gradient(165deg,#1B2E36,#0B1418);border:1px solid rgba(103,232,249,.25);box-shadow:0 18px 40px -18px rgba(0,0,0,.9),inset 0 1px 0 rgba(248,250,252,.16)"></div>
-          <div style="position:absolute;left:9px;top:24px;width:60px;height:38px;border-radius:19px;background:#050A0D;border:1px solid rgba(103,232,249,.2);display:flex;align-items:center;justify-content:center;gap:9px">
-            <span style="width:11px;height:11px;border-radius:50%;background:#67E8F9;box-shadow:0 0 12px 2px rgba(103,232,249,.8)"></span>
-            <span style="width:11px;height:11px;border-radius:50%;background:#67E8F9;box-shadow:0 0 12px 2px rgba(103,232,249,.8)"></span>
-          </div>
-          <div style="position:absolute;left:50%;bottom:2px;transform:translateX(-50%);width:44px;height:8px;border-radius:50%;background:rgba(103,232,249,.22);filter:blur(4px)"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section data-section="product" data-screen-label="Features" style="padding:110px 40px 120px;background:#050A0D">
-  <div style="max-width:1240px;margin:0 auto">
-    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:52px">
-      <div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:#00D6C9;margin-bottom:16px">WHAT'S INSIDE</div>
-        <h2 style="font-family:'Space Grotesk',sans-serif;font-size:46px;line-height:1.08;letter-spacing:-1.4px;font-weight:700;margin:0;max-width:640px">Plan A is easy. We build the rest of the alphabet.</h2>
-      </div>
-      <p style="font-size:15px;line-height:1.6;color:#9BA8B0;max-width:320px;margin:0">Six systems working together on one trip — from the first itinerary draft to the moment the sky opens.</p>
-    </div>
-
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px">
-      <div style="padding:30px;border-radius:24px;background:#101B20;border:1px solid rgba(155,168,176,.10)" style-hover="border-color:rgba(0,214,201,.35);background:#142329">
-        <div style="width:44px;height:44px;border-radius:14px;background:rgba(0,214,201,.12);display:flex;align-items:center;justify-content:center;margin-bottom:22px">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2v4M10 14v4M2 10h4M14 10h4" stroke="#00D6C9" stroke-width="1.8" stroke-linecap="round"/><circle cx="10" cy="10" r="3.4" stroke="#00D6C9" stroke-width="1.8"/></svg>
-        </div>
-        <h3 style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;margin:0 0 10px">AI Planning</h3>
-        <p style="font-size:14px;line-height:1.6;color:#9BA8B0;margin:0">Builds a full 3-day itinerary from your dates, budget and pace in under a minute.</p>
-      </div>
-
-      <div style="padding:30px;border-radius:24px;background:linear-gradient(160deg,#142329,#101B20);border:1px solid rgba(223,255,0,.28);box-shadow:0 0 60px -30px rgba(223,255,0,.4)">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px">
-          <div style="width:44px;height:44px;border-radius:14px;background:rgba(223,255,0,.14);display:flex;align-items:center;justify-content:center">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M11 2 4 11h4l-1 7 7-9h-4l1-7Z" stroke="#DFFF00" stroke-width="1.6" stroke-linejoin="round"/></svg>
-          </div>
-          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#DFFF00">SIGNATURE</span>
-        </div>
-        <h3 style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;margin:0 0 10px">Rescue Mode</h3>
-        <p style="font-size:14px;line-height:1.6;color:#9BA8B0;margin:0">Rain, delays or a blown budget — Plan B is ready before the group notices.</p>
-      </div>
-
-      <div style="padding:30px;border-radius:24px;background:#101B20;border:1px solid rgba(155,168,176,.10)" style-hover="border-color:rgba(0,214,201,.35);background:#142329">
-        <div style="width:44px;height:44px;border-radius:14px;background:rgba(103,232,249,.12);display:flex;align-items:center;justify-content:center;margin-bottom:22px">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 6l5-3 6 3 5-3v11l-5 3-6-3-5 3V6Z" stroke="#67E8F9" stroke-width="1.6" stroke-linejoin="round"/><path d="M7 3v11M13 6v11" stroke="#67E8F9" stroke-width="1.6"/></svg>
-        </div>
-        <h3 style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;margin:0 0 10px">3D Map</h3>
-        <p style="font-size:14px;line-height:1.6;color:#9BA8B0;margin:0">See the whole route in depth — elevation, transit legs and every stop in order.</p>
-      </div>
-
-      <div style="padding:30px;border-radius:24px;background:#101B20;border:1px solid rgba(155,168,176,.10)" style-hover="border-color:rgba(0,214,201,.35);background:#142329">
-        <div style="width:44px;height:44px;border-radius:14px;background:rgba(0,214,201,.12);display:flex;align-items:center;justify-content:center;margin-bottom:22px">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="7" cy="7" r="3" stroke="#00D6C9" stroke-width="1.7"/><circle cx="14" cy="13" r="3" stroke="#00D6C9" stroke-width="1.7"/><path d="M9.6 8.8 11.4 11" stroke="#00D6C9" stroke-width="1.7" stroke-linecap="round"/></svg>
-        </div>
-        <h3 style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;margin:0 0 10px">Group Sync</h3>
-        <p style="font-size:14px;line-height:1.6;color:#9BA8B0;margin:0">Four sets of preferences, one plan everybody actually agreed to.</p>
-      </div>
-
-      <div style="padding:30px;border-radius:24px;background:#101B20;border:1px solid rgba(155,168,176,.10)" style-hover="border-color:rgba(0,214,201,.35);background:#142329">
-        <div style="width:44px;height:44px;border-radius:14px;background:rgba(110,231,168,.12);display:flex;align-items:center;justify-content:center;margin-bottom:22px">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2.5" y="5.5" width="15" height="9" rx="2.5" stroke="#6EE7A8" stroke-width="1.7"/><path d="M2.5 9h15" stroke="#6EE7A8" stroke-width="1.7"/></svg>
-        </div>
-        <h3 style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;margin:0 0 10px">Budget Brain</h3>
-        <p style="font-size:14px;line-height:1.6;color:#9BA8B0;margin:0">Tracks RM600 per person live and flags a swap before you overspend.</p>
-      </div>
-
-      <div style="padding:30px;border-radius:24px;background:#101B20;border:1px solid rgba(155,168,176,.10)" style-hover="border-color:rgba(0,214,201,.35);background:#142329">
-        <div style="width:44px;height:44px;border-radius:14px;background:rgba(103,232,249,.12);display:flex;align-items:center;justify-content:center;margin-bottom:22px">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2.5l2.2 4.8 5.3.6-3.9 3.6 1 5.2-4.6-2.6-4.6 2.6 1-5.2L2.5 7.9l5.3-.6L10 2.5Z" stroke="#67E8F9" stroke-width="1.5" stroke-linejoin="round"/></svg>
-        </div>
-        <h3 style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;margin:0 0 10px">Smart Recommendations</h3>
-        <p style="font-size:14px;line-height:1.6;color:#9BA8B0;margin:0">Cafés, night markets and photo spots picked from what your crew already loves.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section data-screen-label="Brand identity" style="padding:100px 40px 120px;background:#0B1418;border-top:1px solid rgba(155,168,176,.10)">
-  <div style="max-width:1240px;margin:0 auto">
-    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:#DFFF00;margin-bottom:14px">PHASE 1 — BRAND IDENTITY</div>
-    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:44px;letter-spacing:-1.3px;font-weight:700;margin:0 0 14px">The EscapeSync system</h2>
-    <p style="font-size:15px;line-height:1.6;color:#9BA8B0;max-width:560px;margin:0 0 52px">Logo, mascot, palette and type — locked for every later phase.</p>
-
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px;margin-bottom:18px">
-      <div style="padding:34px;border-radius:24px;background:#101B20;border:1px solid rgba(155,168,176,.10)">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#9BA8B0;margin-bottom:28px">PRIMARY LOCKUP</div>
-        <div style="display:flex;align-items:center;gap:16px;margin-bottom:38px">
-          <svg width="46" height="46" viewBox="0 0 32 32" fill="none">
-            <circle cx="16" cy="16" r="13" stroke="#67E8F9" stroke-opacity=".35" stroke-width="1.5"/>
-            <path d="M5 21c6 0 6-10 11-10s5 10 11 10" stroke="#00D6C9" stroke-width="2.4" stroke-linecap="round"/>
-            <circle cx="16" cy="11" r="4" fill="#DFFF00"/>
-          </svg>
-          <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:30px;letter-spacing:-.8px">Escape<span style="color:#DFFF00">Sync</span></span>
-        </div>
-        <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center">
-          <div style="width:64px;height:64px;border-radius:18px;background:#050A0D;display:flex;align-items:center;justify-content:center;border:1px solid rgba(155,168,176,.14)">
-            <svg width="34" height="34" viewBox="0 0 32 32" fill="none"><path d="M5 21c6 0 6-10 11-10s5 10 11 10" stroke="#00D6C9" stroke-width="2.6" stroke-linecap="round"/><circle cx="16" cy="11" r="4" fill="#DFFF00"/></svg>
-          </div>
-          <div style="width:64px;height:64px;border-radius:18px;background:#DFFF00;display:flex;align-items:center;justify-content:center">
-            <svg width="34" height="34" viewBox="0 0 32 32" fill="none"><path d="M5 21c6 0 6-10 11-10s5 10 11 10" stroke="#050A0D" stroke-width="2.6" stroke-linecap="round"/><circle cx="16" cy="11" r="4" fill="#050A0D"/></svg>
-          </div>
-          <div style="width:64px;height:64px;border-radius:50%;background:#0B1418;border:1px solid rgba(103,232,249,.3);display:flex;align-items:center;justify-content:center">
-            <svg width="30" height="30" viewBox="0 0 32 32" fill="none"><path d="M5 21c6 0 6-10 11-10s5 10 11 10" stroke="#67E8F9" stroke-width="2.6" stroke-linecap="round"/><circle cx="16" cy="11" r="4" fill="#DFFF00"/></svg>
-          </div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;line-height:1.7;color:#9BA8B0">APP ICON<br>MAP MARKER<br>LOADER</div>
-        </div>
-      </div>
-
-      <div style="padding:34px;border-radius:24px;background:#101B20;border:1px solid rgba(155,168,176,.10)">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#9BA8B0;margin-bottom:28px">TYPOGRAPHY</div>
-        <div style="font-family:'Space Grotesk',sans-serif;font-size:40px;font-weight:700;letter-spacing:-1.2px;line-height:1.1;margin-bottom:6px">Space Grotesk</div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0;margin-bottom:26px">DISPLAY · 700 / 600 · TIGHT TRACKING</div>
-        <div style="font-family:Manrope,sans-serif;font-size:19px;line-height:1.6;margin-bottom:6px">Manrope keeps body copy calm and highly readable at every size.</div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0;margin-bottom:26px">BODY · 400 / 600</div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em;color:#00D6C9">JETBRAINS MONO · LABELS &amp; LIVE DATA</div>
-      </div>
-    </div>
-
-    <div style="padding:34px;border-radius:24px;background:#101B20;border:1px solid rgba(155,168,176,.10);margin-bottom:18px">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#9BA8B0;margin-bottom:26px">COLOR SYSTEM</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:12px">
-        <div><div style="height:76px;border-radius:14px;background:#050A0D;border:1px solid rgba(155,168,176,.16)"></div><div style="font-size:12px;font-weight:600;margin-top:9px">Background</div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0">#050A0D</div></div>
-        <div><div style="height:76px;border-radius:14px;background:#0B1418;border:1px solid rgba(155,168,176,.16)"></div><div style="font-size:12px;font-weight:600;margin-top:9px">Secondary BG</div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0">#0B1418</div></div>
-        <div><div style="height:76px;border-radius:14px;background:#101B20;border:1px solid rgba(155,168,176,.16)"></div><div style="font-size:12px;font-weight:600;margin-top:9px">Card</div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0">#101B20</div></div>
-        <div><div style="height:76px;border-radius:14px;background:#142329;border:1px solid rgba(155,168,176,.16)"></div><div style="font-size:12px;font-weight:600;margin-top:9px">Card Elevated</div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0">#142329</div></div>
-        <div><div style="height:76px;border-radius:14px;background:#DFFF00"></div><div style="font-size:12px;font-weight:600;margin-top:9px">Primary Lime</div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0">#DFFF00</div></div>
-        <div><div style="height:76px;border-radius:14px;background:#B9E900"></div><div style="font-size:12px;font-weight:600;margin-top:9px">Secondary Lime</div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0">#B9E900</div></div>
-        <div><div style="height:76px;border-radius:14px;background:#00D6C9"></div><div style="font-size:12px;font-weight:600;margin-top:9px">Electric Teal</div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0">#00D6C9</div></div>
-        <div><div style="height:76px;border-radius:14px;background:#67E8F9"></div><div style="font-size:12px;font-weight:600;margin-top:9px">Soft Cyan</div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0">#67E8F9</div></div>
-        <div><div style="height:76px;border-radius:14px;background:#6EE7A8"></div><div style="font-size:12px;font-weight:600;margin-top:9px">Success</div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0">#6EE7A8</div></div>
-        <div><div style="height:76px;border-radius:14px;background:#FFB84D"></div><div style="font-size:12px;font-weight:600;margin-top:9px">Warning</div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0">#FFB84D</div></div>
-        <div><div style="height:76px;border-radius:14px;background:#FF6B5F"></div><div style="font-size:12px;font-weight:600;margin-top:9px">Danger</div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0">#FF6B5F</div></div>
-        <div><div style="height:76px;border-radius:14px;background:#F8FAFC"></div><div style="font-size:12px;font-weight:600;margin-top:9px">Primary White</div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#9BA8B0">#F8FAFC</div></div>
-      </div>
-    </div>
-
-    <div style="padding:34px;border-radius:24px;background:#101B20;border:1px solid rgba(155,168,176,.10)">
-      <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:baseline;justify-content:space-between;margin-bottom:34px">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#9BA8B0">MASCOT — PIP</div>
-        <div style="font-size:14px;color:#9BA8B0;max-width:520px">Pip is the travel guide inside EscapeSync: a small companion drone with a dark shell, glowing cyan eyes and a lime signal light that brightens when something needs attention.</div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
-        <div style="padding:34px 24px;border-radius:20px;background:#0B1418;border:1px solid rgba(155,168,176,.10);display:flex;flex-direction:column;align-items:center;gap:24px">
-          <div style="position:relative;width:104px;height:118px">
-            <div style="position:absolute;left:50%;top:6px;transform:translateX(-50%);width:2px;height:18px;background:#B9E900"></div>
-            <div style="position:absolute;left:50%;top:-2px;transform:translateX(-50%);width:11px;height:11px;border-radius:50%;background:#DFFF00;opacity:.75"></div>
-            <div style="position:absolute;left:0;top:22px;width:104px;height:88px;border-radius:34px;background:linear-gradient(165deg,#1B2E36,#0B1418);border:1px solid rgba(103,232,249,.22);box-shadow:inset 0 1px 0 rgba(248,250,252,.14)"></div>
-            <div style="position:absolute;left:12px;top:38px;width:80px;height:52px;border-radius:26px;background:#050A0D;border:1px solid rgba(103,232,249,.18);display:flex;align-items:center;justify-content:center;gap:14px">
-              <span style="width:13px;height:13px;border-radius:50%;background:#67E8F9;box-shadow:0 0 12px 2px rgba(103,232,249,.7)"></span>
-              <span style="width:13px;height:13px;border-radius:50%;background:#67E8F9;box-shadow:0 0 12px 2px rgba(103,232,249,.7)"></span>
-            </div>
-          </div>
-          <div style="text-align:center">
-            <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600">Neutral</div>
-            <div style="font-size:12px;color:#9BA8B0;margin-top:4px">Idle, listening</div>
-          </div>
-        </div>
-
-        <div style="padding:34px 24px;border-radius:20px;background:#0B1418;border:1px solid rgba(255,184,77,.22);display:flex;flex-direction:column;align-items:center;gap:24px">
-          <div style="position:relative;width:104px;height:118px">
-            <div style="position:absolute;left:50%;top:6px;transform:translateX(-50%);width:2px;height:18px;background:#FFB84D"></div>
-            <div style="position:absolute;left:50%;top:-4px;transform:translateX(-50%);width:14px;height:14px;border-radius:50%;background:#FFB84D;box-shadow:0 0 18px 5px rgba(255,184,77,.6);animation:pulseglow 1.4s ease-in-out infinite"></div>
-            <div style="position:absolute;left:0;top:22px;width:104px;height:88px;border-radius:34px;background:linear-gradient(165deg,#22343C,#0B1418);border:1px solid rgba(255,184,77,.3);box-shadow:inset 0 1px 0 rgba(248,250,252,.14)"></div>
-            <div style="position:absolute;left:12px;top:38px;width:80px;height:52px;border-radius:26px;background:#050A0D;border:1px solid rgba(255,184,77,.2);display:flex;align-items:center;justify-content:center;gap:14px">
-              <span style="width:14px;height:16px;border-radius:6px;background:#67E8F9;box-shadow:0 0 12px 2px rgba(103,232,249,.7)"></span>
-              <span style="width:14px;height:16px;border-radius:6px;background:#67E8F9;box-shadow:0 0 12px 2px rgba(103,232,249,.7)"></span>
-            </div>
-            <div style="position:absolute;right:-4px;top:26px;padding:3px 8px;border-radius:100px;background:#FF6B5F;color:#050A0D;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600">1</div>
-          </div>
-          <div style="text-align:center">
-            <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600">Alert</div>
-            <div style="font-size:12px;color:#9BA8B0;margin-top:4px">Disruption detected</div>
-          </div>
-        </div>
-
-        <div style="padding:34px 24px;border-radius:20px;background:#0B1418;border:1px solid rgba(223,255,0,.22);display:flex;flex-direction:column;align-items:center;gap:24px">
-          <div style="position:relative;width:104px;height:118px;animation:floaty 4s ease-in-out infinite">
-            <div style="position:absolute;left:50%;top:6px;transform:translateX(-50%);width:2px;height:18px;background:#B9E900"></div>
-            <div style="position:absolute;left:50%;top:-4px;transform:translateX(-50%);width:13px;height:13px;border-radius:50%;background:#DFFF00;box-shadow:0 0 16px 4px rgba(223,255,0,.6)"></div>
-            <div style="position:absolute;left:0;top:22px;width:104px;height:88px;border-radius:34px;background:linear-gradient(165deg,#1B2E36,#0B1418);border:1px solid rgba(223,255,0,.28);box-shadow:inset 0 1px 0 rgba(248,250,252,.14)"></div>
-            <div style="position:absolute;left:12px;top:38px;width:80px;height:52px;border-radius:26px;background:#050A0D;border:1px solid rgba(223,255,0,.18);display:flex;align-items:center;justify-content:center;gap:14px">
-              <span style="width:15px;height:8px;border-radius:8px 8px 0 0;background:#DFFF00;box-shadow:0 0 12px 2px rgba(223,255,0,.6)"></span>
-              <span style="width:15px;height:8px;border-radius:8px 8px 0 0;background:#DFFF00;box-shadow:0 0 12px 2px rgba(223,255,0,.6)"></span>
-            </div>
-          </div>
-          <div style="text-align:center">
-            <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600">Happy</div>
-            <div style="font-size:12px;color:#9BA8B0;margin-top:4px">Plan locked, crew synced</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer style="padding:44px 40px;background:#050A0D;border-top:1px solid rgba(155,168,176,.10);display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between">
-  <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px">Escape<span style="color:#DFFF00">Sync</span></span>
-  <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#9BA8B0">PLAN THE ADVENTURE. SURVIVE THE UNEXPECTED.</span>
-</footer>
-
+<div class="shell">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header" aria-label="Primary navigation">
+    <a class="brand" href="#top" data-action="home"><svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="13" stroke="#67E8F9" stroke-opacity=".55" stroke-width="1.4"/><path d="M5 21c6 0 6-10 11-10s5 10 11 10" stroke="#00D6C9" stroke-width="2.4" stroke-linecap="round"/><circle cx="16" cy="11" r="4" fill="#DFFF00"/></svg><span>Escape<em>Sync</em></span></a>
+    <nav class="main-nav" aria-label="Main menu"><button data-action="product">Product</button><button data-action="rescue">Rescue mode</button><button data-action="watch">How it works</button><button data-action="pricing">Pricing</button></nav>
+    <div class="header-actions"><button class="text-action" data-action="sign-in">SIGN IN</button><button class="pill-action" data-action="start-trip">PLAN A TRIP</button></div>
+  </header>
+  <main id="main-content">
+    <section id="top" class="cinematic-hero" data-section="cinematic-hero" aria-labelledby="hero-title">
+      <img class="hero-photo" src="https://images.unsplash.com/photo-1577609060534-4254158ea447?auto=format&amp;fit=crop&amp;fm=jpg&amp;q=82&amp;w=2400" alt="Kuala Lumpur skyline illuminated at night" loading="eager"><div class="hero-wash"></div><div class="hero-grid"></div>
+      <svg class="hero-route" viewBox="0 0 1440 900" preserveAspectRatio="none" aria-hidden="true"><path d="M-60 720C280 700 390 510 650 520S1010 310 1510 150" stroke="rgba(0,214,201,.32)" stroke-width="2" fill="none"/><path class="signal" d="M-60 720C280 700 390 510 650 520S1010 310 1510 150" stroke="#67E8F9" stroke-width="3" stroke-linecap="round" fill="none"/><circle cx="650" cy="520" r="6" fill="#DFFF00"/><circle cx="650" cy="520" r="22" fill="none" stroke="rgba(223,255,0,.45)"/></svg>
+      <h1 id="hero-title" class="hero-title">ESCAPE<span>SYNC</span></h1>
+      <div class="hero-content"><div class="hero-copy"><p class="eyebrow">Group travel, without the group chaos</p><h2>Your trip. Ready for anything.</h2><p>EscapeSync builds one plan around every traveller, keeps the budget honest, and changes course the moment reality does.</p><div class="hero-buttons"><button class="pill-action" data-action="start-trip">START YOUR ESCAPE</button><button class="outline-action" data-action="watch"><span aria-hidden="true">▶</span> WATCH THE STORY</button></div></div>
+        <aside class="trip-console" aria-label="Live trip preview"><div class="console-top"><span>KL → MELAKA · 03 DAYS</span><span class="live">● LIVE</span></div><div class="route-line"><svg viewBox="0 0 400 70" preserveAspectRatio="none" aria-hidden="true"><path d="M8 52C92 52 102 16 190 28S303 52 392 12" stroke="rgba(103,232,249,.28)" stroke-width="2" fill="none"/><path d="M8 52C92 52 102 16 190 28S303 52 392 12" stroke="#DFFF00" stroke-width="3" fill="none"/></svg></div><div class="console-bottom"><span>4 travellers</span><span>RM600 / person</span><strong>87 HEALTH</strong></div></aside></div>
+      <div class="scroll-cue">Scroll to follow the trip</div>
+    </section>
+    <section class="story" aria-label="A trip that adapts">
+      <article class="story-chapter" data-section="disruption-story"><img class="story-photo" src="https://images.unsplash.com/photo-1767800220586-da237dd59144?auto=format&amp;fit=crop&amp;fm=jpg&amp;q=80&amp;w=2400" alt="A boat moving through the colourful Melaka river district" loading="lazy"><div class="story-overlay"></div><div class="story-no">01</div><div class="story-content"><span class="chapter-label">14:10 · JONKER STREET</span><h2>Then the sky changes.</h2><p>One storm puts the riverside walk, dinner booking, and four different expectations at risk. EscapeSync catches the chain reaction before the group chat does.</p><div class="weather-alert"><span class="weather-icon" aria-hidden="true">☂</span><span><strong>Heavy rain in 35 minutes</strong><small>Outdoor route confidence dropped to 28%</small></span><b>RISK FOUND</b></div></div></article>
+      <article class="story-chapter plan-b" data-section="plan-b-story"><img class="story-photo" src="https://images.unsplash.com/photo-1647842751207-68c3932167b5?auto=format&amp;fit=crop&amp;fm=jpg&amp;q=80&amp;w=2400" alt="Historic buildings reflected in the Melaka River" loading="lazy"><div class="story-overlay"></div><div class="story-no">02</div><div class="story-content"><span class="chapter-label">14:11 · PLAN B READY</span><h2>The trip keeps moving.</h2><p>Pip swaps in an indoor heritage stop six minutes away, holds the dinner time, protects the budget, and keeps every traveller's must-have intact.</p><div class="rescue-chip"><span aria-hidden="true">●</span> REROUTED · +6 MIN · RM0 EXTRA</div></div></article>
+    </section>
+    <section class="destination-section" data-section="destination-rail" aria-labelledby="destination-title"><div class="section-head"><div><p class="section-kicker">Built around where you want to go</p><h2 id="destination-title">A country of<br>different rhythms.</h2></div><div class="rail-controls" aria-label="Destination controls"><a class="rail-arrow" href="#destination-kl" aria-label="Previous destination">←</a><a class="rail-arrow" href="#destination-langkawi" aria-label="Next destination">→</a></div></div>
+      <div class="destination-rail" aria-label="Featured destinations"><article id="destination-kl" class="destination-card" tabindex="0"><img src="https://images.unsplash.com/photo-1577609060534-4254158ea447?auto=format&amp;fit=crop&amp;q=78&amp;w=1200" alt="Kuala Lumpur skyline at night" loading="lazy"><div class="destination-meta"><small>City energy · Food · Nightlife</small><h3>Kuala Lumpur</h3><p>48 hours · best for first-time crews</p></div></article><article id="destination-melaka" class="destination-card" tabindex="0"><img src="https://images.unsplash.com/photo-1767800220586-da237dd59144?auto=format&amp;fit=crop&amp;q=78&amp;w=1200" alt="Colourful buildings along Melaka River" loading="lazy"><div class="destination-meta"><small>Heritage · Cafés · Slow walks</small><h3>Melaka</h3><p>3 days · 88% group match</p></div></article><article id="destination-langkawi" class="destination-card" tabindex="0"><img src="https://images.unsplash.com/photo-1771701685174-e85722e122a5?auto=format&amp;fit=crop&amp;q=78&amp;w=1200" alt="Tropical islands and calm sea at Langkawi" loading="lazy"><div class="destination-meta"><small>Island · Nature · Reset</small><h3>Langkawi</h3><p>4 days · low-planning escape</p></div></article><article class="destination-card" tabindex="0"><img src="https://images.unsplash.com/photo-1579565585621-ea4d93f6951f?auto=format&amp;fit=crop&amp;q=78&amp;w=1200" alt="Malaysian city lights after sunset" loading="lazy"><div class="destination-meta"><small>Street food · Culture · Late nights</small><h3>Penang</h3><p>3 days · built for curious crews</p></div></article></div>
+    </section>
+    <section class="rescue-section" data-section="rescue-comparison" aria-labelledby="rescue-title"><div class="rescue-heading"><div><p class="section-kicker" style="color:#67E8F9">Rescue mode</p><h2 id="rescue-title">Plan B before<br>anyone asks.</h2></div><p>EscapeSync doesn't throw away the itinerary. It understands what changed, protects what matters, and edits only the part that stopped working.</p></div><div class="comparison"><article class="plan-panel"><img src="https://images.unsplash.com/photo-1767800220586-da237dd59144?auto=format&amp;fit=crop&amp;q=72&amp;w=1200" alt="Original Melaka riverside route" loading="lazy"><div class="plan-content"><span class="plan-state">ORIGINAL · WEATHER RISK</span><h3>Jonker river walk</h3><div class="plan-stats"><div><small>Start</small><strong>15:00</strong></div><div><small>Walk</small><strong>42 min</strong></div><div><small>Confidence</small><strong>28%</strong></div></div></div></article><div class="comparison-arrow" aria-hidden="true">→</div><article class="plan-panel new-plan"><img src="https://images.unsplash.com/photo-1647842751207-68c3932167b5?auto=format&amp;fit=crop&amp;q=72&amp;w=1200" alt="Indoor heritage alternative near Melaka River" loading="lazy"><div class="plan-content"><span class="plan-state">PLAN B · CREW MATCHED</span><h3>Heritage house + café</h3><div class="plan-stats"><div><small>Start</small><strong>15:06</strong></div><div><small>Transfer</small><strong>6 min</strong></div><div><small>Confidence</small><strong>94%</strong></div></div></div></article></div><div class="comparison-action"><button class="pill-action" data-action="plan-b">SEE THE FULL PLAN B</button></div></section>
+    <section class="system-section" data-section="product" aria-labelledby="system-title"><div class="system-heading"><p class="section-kicker">One trip, four systems</p><h2 id="system-title">Everything stays<br>in sync.</h2></div><div class="system-list"><article class="system-item"><span class="system-index">01</span><h3>Group Sync</h3><p>Balances food, pace, budget, accessibility, and must-have stops across the whole crew.</p><span class="system-status">88% matched</span></article><article class="system-item"><span class="system-index">02</span><h3>Budget Brain</h3><p>Tracks the shared spend live and suggests swaps before the budget becomes a problem.</p><span class="system-status">RM142 buffer</span></article><article class="system-item"><span class="system-index">03</span><h3>Live Route</h3><p>Keeps transport, timings, bookings, weather, and Plan B visible in one route.</p><span class="system-status">12 stops</span></article><article class="system-item"><span class="system-index">04</span><h3>Pip Assistant</h3><p>Explains what changed, why it changed, and what the crew needs to decide next.</p><span class="system-status">Always on</span></article></div></section>
+    <section class="final-cta" data-section="final-cta" aria-labelledby="final-title"><img src="https://images.unsplash.com/photo-1771701685174-e85722e122a5?auto=format&amp;fit=crop&amp;q=82&amp;w=2400" alt="Calm tropical water and islands in Langkawi" loading="lazy"><div class="final-content"><p class="eyebrow" style="justify-content:center">Your next escape starts here</p><h2 id="final-title">Make the plan.<br><i>Keep the freedom.</i></h2><p>Tell us the people, the budget, and the feeling you want. EscapeSync handles the coordination and stays ready when the day changes.</p><button class="pill-action" data-action="start-trip">BUILD OUR ESCAPE</button></div></section>
+  </main>
+  <footer class="site-footer"><a class="brand" href="#top"><span>Escape<em>Sync</em></span></a><span class="footer-line">Plan the adventure. Survive the unexpected.</span><button class="text-action" data-action="about">ABOUT ESCAPESYNC</button></footer>
 </div>
 </x-dc>
 </body>

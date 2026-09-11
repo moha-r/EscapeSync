@@ -41,10 +41,16 @@ test('landing and builder expose the connected primary flow', () => {
   assert.match(read('EscapeSync Phase 2.dc.html'), /EscapeSyncApp\.navigate\(["']command["']\)/);
 });
 
-test('landing hero exposes the mission-control route layer accessibly', () => {
+test('landing delivers the cinematic travel story and connected actions', () => {
   const landing = read('EscapeSync Phase 1.dc.html');
-  assert.match(landing, /data-visual="mission-route"/);
-  assert.match(landing, /data-visual="route-pulse"/);
+  for (const marker of ['cinematic-hero', 'disruption-story', 'plan-b-story', 'destination-rail', 'rescue-comparison', 'final-cta']) {
+    assert.match(landing, new RegExp(`data-section="${marker}"`), marker);
+  }
+  for (const action of ['start-trip', 'watch', 'plan-b', 'rescue', 'sign-in']) {
+    assert.match(landing, new RegExp(`data-action="${action}"`), action);
+  }
+  assert.match(landing, /images\.unsplash\.com/);
+  assert.match(landing, /scroll-snap-type/);
   assert.match(landing, /prefers-reduced-motion: reduce/);
 });
 
